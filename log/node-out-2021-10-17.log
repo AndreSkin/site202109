@@ -1,0 +1,26 @@
+App listening on port 8000 started 10/17/2021, 8:35:23 AM
+[33m[nodemon] 2.0.7[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] or send SIGHUP to 18 to restart[39m
+[33m[nodemon] watching path(s): webapp/**/*[39m
+[33m[nodemon] watching extensions: js,html,css,ts,vue,json[39m
+[32m[nodemon] starting `/usr/local/bin/exec-node.sh /webapp/index.js`[39m
+[33m[nodemon] spawning[39m
+[33m[nodemon] child pid: 31[39m
+[33m[nodemon] watching 17 files[39m
+(node:39) Warning: Accessing non-existent property 'MongoError' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+App listening on port 8000 started 10/17/2021, 8:36:12 AM
+[33m[nodemon] files triggering change check: webapp/index.js[39m
+[33m[nodemon] matched rule: /webapp/**/*[39m
+[33m[nodemon] changes after filters (before/after): 1/1[39m
+[33m[nodemon] delaying restart for 1000ms[39m
+[32m[nodemon] restarting due to changes...[39m
+[33m[nodemon] webapp/index.js[39m
+
+[32m[nodemon] starting `/usr/local/bin/exec-node.sh /webapp/index.js`[39m
+[33m[nodemon] spawning[39m
+[33m[nodemon] child pid: 52[39m
+(node:61) Warning: Accessing non-existent property 'MongoError' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+App listening on port 8000 started 10/17/2021, 8:51:07 AM
