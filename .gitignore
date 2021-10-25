@@ -1,3 +1,7 @@
 .vs
 .git
 log
+node_modules/
+cgi_bin/
+data/
+db/
