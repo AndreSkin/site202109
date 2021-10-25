@@ -1,7 +1,3 @@
 .vs
 .git
-./log
-./html/node_modules/
-./cgi_bin/
-./data/
-./db/
+/html/node_modules/
