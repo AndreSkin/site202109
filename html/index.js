@@ -1,12 +1,26 @@
 const express = require('express');
 const app = express();
 
+var MongoClient = require('mongodb').MongoClient;
+
+const mongoCredentials = 
+{
+	user: "site202109",
+	pwd: "ahmieC6r",
+	site: "mongo_site202109"
+}  
+
+const MongoUrl = "mongodb://site202109:ahmieC6r@mongo_site202109/test?retryWrites=true&w=majority";
+const localMongoUri ="mongodb://localhost:27017/localtest`"
+
+
 app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Hello culo');
 });
 
+/*
 const corsi =
     [
         { id: 1, name: "igsw" },
@@ -45,9 +59,86 @@ app.post('/api/courses', (req, res) => {
     corsi.push(course);
     res.send(course); //convenzione ritornare l'oggetto dopo post
 });
+*/
 
 
-const port = process.env.PORT || 3000
+async function Mongo() {
+    MongoClient.connect(localMongoUri, function (err, database) {
+        if (err) throw err;
+        console.log("Database created!");
+        var dbo = database.db("mydb");
+        var OurID = 1;
+        var myobj = [
+            { name: "Skin", address: "Via delle vie 1", _id: OurID++ },
+            { name: 'John', address: 'Highway 71', _id: OurID++ },
+            { name: 'Peter', address: 'Lowstreet 4', _id: OurID++ },
+            { name: 'Amy', address: 'Apple st 652', _id: OurID++ },
+            { name: 'Hannah', address: 'Mountain 21', _id: OurID++ },
+            { name: 'Michael', address: 'Valley 345', _id: OurID++ },
+            { name: 'Sandy', address: 'Ocean blvd 2', _id: OurID++ },
+            { name: 'Betty', address: 'Green Grass 1', _id: OurID++ },
+            { name: 'Richard', address: 'Sky st 331', _id: OurID++ },
+            { name: 'Susan', address: 'One way 98', _id: OurID++ },
+            { name: 'Vicky', address: 'Yellow Garden 2', _id: OurID++ },
+            { name: 'Ben', address: 'Park Lane 38', _id: OurID++ },
+            { name: 'William', address: 'Central st 954', _id: OurID++ },
+            { name: 'Chuck', address: 'Main Road 989', _id: OurID++ },
+            { name: 'Viola', address: 'Sideway 1633', _id: OurID }
+        ];
+
+        /*
+        dbo.createCollection("customers", function (err, res) {
+            if (err) throw err;
+            console.log("Collection created!");
+        });
+        
+        dbo.collection("customers").insertMany(myobj, function (err, res) {
+            if (err) throw err;
+            console.log("Number of documents inserted: " + res.insertedCount);
+        });
+        */
+
+        var query = { name: "Skin" };
+        var querynum = {num: "1"};
+
+        dbo.collection("customers").find({}/*{projection: {_id:0 , name:1, address:1}}*/).toArray(function (err, result)
+        {
+            if (err) throw err;
+            console.log(result);
+        });
+
+        dbo.collection("customers").find({}).sort({name:1}).limit(5).toArray(function (err, result)
+        {
+            if (err) throw err;
+            console.log(result);
+        });
+
+        dbo.collection("customers").deleteMany(querynum, function (err, result)
+        {
+            if (err) throw err;
+            console.log(result);
+        });
+
+
+        var myquery = { name: "Mickey" };
+        var newvalues = { $set: { name: "Michelone", address: "Canyon 123" } };
+
+        dbo.collection("customers").updateOne(myquery, newvalues, function (err, res)
+        {
+            if (err) throw err;
+            console.log("1 document updated");
+            database.close();
+        });
+
+        /*Drop per cancellare collezione*/
+
+    });
+}
+
+app.get('/mongo', (req, res) => 
+{
+    res.send(Mongo());
+});
+
+const port = process.env.PORT || 8000
 app.listen(port, () => console.log(`Listening on port ${port}...`));
-
-//38 minuti
