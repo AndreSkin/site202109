@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+var cors = require('cors');
 
 var MongoClient = require('mongodb').MongoClient;
 
@@ -45,24 +46,10 @@ app.get('/api/courses/:id', (req, res) => {
     else res.send(cor);
 });
 
-app.post('/api/courses', (req, res) => {
-    if(!req.body.name || req.body.name.length < 3) {
-        //400 Bad Request
-        res.status(400).send("input sbagliato")
-        return;
-    }
-
-    const course = {
-        id: corsi.length + 1,
-        name: req.body.name
-    };
-    corsi.push(course);
-    res.send(course); //convenzione ritornare l'oggetto dopo post
-});
 */
 
 
-async function Mongo() {
+function Mongo() {
     MongoClient.connect(localMongoUri, function (err, database) {
         if (err) throw err;
         console.log("Database created!");
@@ -99,7 +86,7 @@ async function Mongo() {
         */
 
         var query = { name: "Skin" };
-        var querynum = {num: "1"};
+        var querynum = {name: "null"};
 
         dbo.collection("customers").find({}/*{projection: {_id:0 , name:1, address:1}}*/).toArray(function (err, result)
         {
@@ -139,6 +126,117 @@ app.get('/mongo', (req, res) =>
 {
     res.send(Mongo());
 });
+
+
+app.get('/mongo/getbyid/:id', (req, res) => {
+    MongoClient.connect(localMongoUri, function (err, database) {
+        if (err) throw err;
+        console.log("Database creato!");
+        var dbo = database.db("mydb");
+
+        var myid = parseInt(req.params.id);
+        let query = {};
+        query['_id'] = myid;
+        dbo.collection("customers").findOne(query, function (err, result) {
+            if (err) throw err;
+            console.log("Trovato uno");
+            console.log(result);
+            res.send(result);
+        });
+    });
+});
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+app.post('/mongo/posthere', (req, res) => {
+    if (!req.body)
+    {
+        //400 Bad Request
+        res.status(400).send("input sbagliato")
+        return;
+    }
+
+    const obj = {
+        _id: 16,
+        name: req.body.name,
+        address: req.body.address
+    };
+    console.log(req.body);
+    MongoClient.connect(localMongoUri, function (err, database)
+    {
+        if (err) throw err;
+        console.log("Database created!");
+        var dbo = database.db("mydb");
+
+        dbo.collection("customers").insertOne(obj, function (err, res)
+        {
+            if (err) throw err;
+            console.log("Aggiunto uno");
+        });
+
+        res.send(obj); //convenzione ritornare l'oggetto dopo post
+    });
+});
+
+
+app.delete('/mongo/deletehere', (req, res) => {
+    if (!req.body) {
+        //400 Bad Request
+        res.status(400).send("input sbagliato")
+        return;
+    }
+
+    const query = {
+        _id: 16,
+    };
+    console.log(req.body);
+    MongoClient.connect(localMongoUri, function (err, database) {
+        if (err) throw err;
+        console.log("Database created!");
+        var dbo = database.db("mydb");
+
+        dbo.collection("customers").deleteOne(query, function (err, res) {
+            if (err) throw err;
+            console.log("Tolto uno");
+        });
+
+        res.send(query);
+
+    });
+});
+
+app.put('/mongo/puthere', (req, res) => {
+    if (!req.body) {
+        //400 Bad Request
+        res.status(400).send("input sbagliato")
+        return;
+    }
+
+    const query = {
+        _id: 16,
+        name: req.body.name,
+        address: req.body.address
+    };
+
+    console.log(req.body);
+    newvalue = { $set: { name: "Stinti" } };
+ 
+    MongoClient.connect(localMongoUri, function (err, database) {
+        if (err) throw err;
+        console.log("Database created!");
+        var dbo = database.db("mydb");
+
+        dbo.collection("customers").updateOne(query, newvalue, function (err, res) {
+            if (err) throw err;
+            console.log("Updated uno");
+        });
+
+        res.send(query);
+
+    });
+});
+
 
 const port = process.env.PORT || 8000
 app.listen(port, () => console.log(`Listening on port ${port}...`));
