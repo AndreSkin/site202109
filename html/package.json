@@ -1,0 +1,26 @@
+{
+  "name": "html",
+  "version": "1.0.0",
+  "description": "site202109 - TW",
+  "main": "index.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongodb": "^4.1.3",
+    "mongoose": "^6.0.12"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndreSkin/site202109.git"
+  },
+  "author": "Andrea Schinoppi, Andrea Loretti",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndreSkin/site202109/issues"
+  },
+  "homepage": "https://github.com/AndreSkin/site202109#readme"
+}
