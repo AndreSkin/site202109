@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Post Form</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous">
+    </script>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+
+</head>
+
+<body>
+
+    <form id="myForm">
+        <div>
+            <label>Nome?</label>
+            <input name="name" id="say" value="Andrea Loretti">
+        </div>
+
+        <div>
+            <label>Indirizzo?</label>
+            <input name="address" id="say" value="Via Marconi">
+        </div>
+
+        <div>
+            <button type="button" id="btn">POST</button>
+			<button type="button" id="btnd">DELETE</button>
+			<button type="button" id="btnp">PUT</button>
+        </div>
+    </form>
+	<button type="button" id="btnb">Bolo</button>
+
+
+</body>
+
+</html>
+
+<script>
+
+$(document).ready(function()
+{
+	alert("ready");
+	document.getElementById ("btn").addEventListener ("click", postdata, false);
+	document.getElementById ("btnd").addEventListener ("click", deletedata, false);
+	document.getElementById ("btnp").addEventListener ("click", putdata, false);
+	document.getElementById ("btnb").addEventListener ("click", bologna, false);
+});
+
+function postdata()
+{
+	var formData = new FormData(document.querySelector('form'));
+
+	var object = {};
+	formData.forEach(function(value, key){
+		object[key] = value;
+	});
+	var json = JSON.stringify(object);
+	
+	$.ajax({
+	  type: "POST",
+	  url: "http://localhost:8000/mongo/posthere",
+	  data: json,
+	  success: function(){},
+	  dataType: "json",
+	  contentType : "application/json"
+	});
+}
+
+function deletedata()
+{
+	var formData = new FormData(document.querySelector('form'));
+
+	var object = {};
+	formData.forEach(function(value, key){
+		object[key] = value;
+	});
+	var json = JSON.stringify(object);
+	
+	$.ajax({
+	  type: "DELETE",
+	  url: "http://localhost:8000/mongo/deletehere",
+	  data: json,
+	  success: function(){},
+	  dataType: "json",
+	  contentType : "application/json"
+	});
+}
+
+function putdata()
+{
+	var formData = new FormData(document.querySelector('form'));
+
+	var object = {};
+	formData.forEach(function(value, key){
+		object[key] = value;
+	});
+	var json = JSON.stringify(object);
+	
+	$.ajax({
+	  type: "PUT",
+	  url: "http://localhost:8000/mongo/puthere",
+	  data: json,
+	  success: function(){},
+	  dataType: "json",
+	  contentType : "application/json"
+	});
+}
+
+function bologna()
+{
+	  $.get('https://nominatim.openstreetmap.org/search?format=json&q='+'Bologna', function(data){
+       console.log(data);
+    });
+}
+</script>

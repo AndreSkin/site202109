@@ -2,7 +2,9 @@ const express = require('express');
 const app = express();
 var cors = require('cors');
 
+
 var MongoClient = require('mongodb').MongoClient;
+const { get } = require('mongoose');
 
 const mongoCredentials = 
 {
@@ -14,6 +16,15 @@ const mongoCredentials =
 const MongoUrl = "mongodb://site202109:ahmieC6r@mongo_site202109/test?retryWrites=true&w=majority";
 const localMongoUri ="mongodb://localhost:27017/localtest`"
 
+////////////////////////////////////////////////////
+  //const express = require('express')
+  //const app = express()
+  const bcrypt = require('bcrypt')
+  const passport = require('passport')
+  const flash = require('express-flash')
+  const session = require('express-session')
+  const methodOverride = require('method-override')
+  ////////////////////////////////////////////////)
 
 app.use(express.json());
 
@@ -78,12 +89,12 @@ function Mongo() {
             if (err) throw err;
             console.log("Collection created!");
         });
-        
+ 
         dbo.collection("customers").insertMany(myobj, function (err, res) {
             if (err) throw err;
             console.log("Number of documents inserted: " + res.insertedCount);
         });
-        */
+      */
 
         var query = { name: "Skin" };
         var querynum = {name: "null"};
@@ -133,10 +144,16 @@ app.get('/mongo/getbyid/:id', (req, res) => {
         if (err) throw err;
         console.log("Database creato!");
         var dbo = database.db("mydb");
-
+        console.log()
         var myid = parseInt(req.params.id);
         let query = {};
         query['_id'] = myid;
+
+        dbo.collection("customers").count({}, function (err, ris) {
+            if (err) throw err;
+            console.log(ris);
+        });
+
         dbo.collection("customers").findOne(query, function (err, result) {
             if (err) throw err;
             console.log("Trovato uno");
@@ -157,17 +174,18 @@ app.post('/mongo/posthere', (req, res) => {
         return;
     }
 
-    const obj = {
-        _id: 16,
-        name: req.body.name,
-        address: req.body.address
-    };
-    console.log(req.body);
     MongoClient.connect(localMongoUri, function (err, database)
     {
         if (err) throw err;
         console.log("Database created!");
         var dbo = database.db("mydb");
+
+        const obj = {
+            _id: 16,
+            name: req.body.name,
+            address: req.body.address
+        };
+        console.log(req.body);
 
         dbo.collection("customers").insertOne(obj, function (err, res)
         {
@@ -187,14 +205,16 @@ app.delete('/mongo/deletehere', (req, res) => {
         return;
     }
 
-    const query = {
-        _id: 16,
-    };
-    console.log(req.body);
     MongoClient.connect(localMongoUri, function (err, database) {
         if (err) throw err;
         console.log("Database created!");
         var dbo = database.db("mydb");
+
+
+        const query = {
+            _id: 16
+        };
+        console.log(req.body);
 
         dbo.collection("customers").deleteOne(query, function (err, res) {
             if (err) throw err;
@@ -213,11 +233,6 @@ app.put('/mongo/puthere', (req, res) => {
         return;
     }
 
-    const query = {
-        _id: 16,
-        name: req.body.name,
-        address: req.body.address
-    };
 
     console.log(req.body);
     newvalue = { $set: { name: "Stinti" } };
@@ -226,6 +241,12 @@ app.put('/mongo/puthere', (req, res) => {
         if (err) throw err;
         console.log("Database created!");
         var dbo = database.db("mydb");
+   
+        const query = {
+        _id: 16,
+        name: req.body.name,
+        address: req.body.address
+    };
 
         dbo.collection("customers").updateOne(query, newvalue, function (err, res) {
             if (err) throw err;
@@ -235,8 +256,87 @@ app.put('/mongo/puthere', (req, res) => {
         res.send(query);
 
     });
+	
 });
 
-
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+  }
+  
+  
+  const initializePassport = require('./passport-config')
+  initializePassport(
+    passport,
+    email => users.find(user => user.email === email),
+    id => users.find(user => user.id === id)
+  )
+  
+  const users = []
+  
+  app.set('view-engine', 'ejs')
+  app.use(express.urlencoded({ extended: false }))
+  app.use(flash())
+  app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+  }))
+  app.use(passport.initialize())
+  app.use(passport.session())
+  app.use(methodOverride('_method'))
+  
+  app.get('/', checkAuthenticated, (req, res) => {
+    res.render('index.ejs', { name: req.user.name })
+  })
+  
+  app.get('/login', checkNotAuthenticated, (req, res) => {
+    res.render('login.ejs')
+  })
+  
+  app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true
+  }))
+  
+  app.get('/register', checkNotAuthenticated, (req, res) => {
+    res.render('register.ejs')
+  })
+  
+  app.post('/register', checkNotAuthenticated, async (req, res) => {
+    try {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10)
+      users.push({
+        id: Date.now().toString(),
+        name: req.body.name,
+        email: req.body.email,
+        password: hashedPassword
+      })
+      res.redirect('/login')
+    } catch {
+      res.redirect('/register')
+    }
+  })
+  
+  app.delete('/logout', (req, res) => {
+    req.logOut()
+    res.redirect('/login')
+  })
+  
+  function checkAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next()
+    }
+  
+    res.redirect('/login')
+  }
+  
+  function checkNotAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      return res.redirect('/')
+    }
+    next()
+  }
+  
 const port = process.env.PORT || 8000
 app.listen(port, () => console.log(`Listening on port ${port}...`));
