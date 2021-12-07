@@ -259,84 +259,128 @@ app.put('/mongo/puthere', (req, res) => {
 	
 });
 
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config()
-  }
+//if (process.env.NODE_ENV !== 'production') {
+//    require('dotenv').config()
+//  }
   
   
-  const initializePassport = require('./passport-config')
-  initializePassport(
-    passport,
-    email => users.find(user => user.email === email),
-    id => users.find(user => user.id === id)
-  )
+//  const initializePassport = require('./passport-config')
+//  initializePassport(
+//    passport,
+//    email => users.find(user => user.email === email),
+//    id => users.find(user => user.id === id)
+//  )
   
-  const users = []
+//  const users = []
   
-  app.set('view-engine', 'ejs')
-  app.use(express.urlencoded({ extended: false }))
-  app.use(flash())
-  app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false
-  }))
-  app.use(passport.initialize())
-  app.use(passport.session())
-  app.use(methodOverride('_method'))
+//  app.set('view-engine', 'ejs')
+//  app.use(express.urlencoded({ extended: false }))
+//  app.use(flash())
+//  app.use(session({
+//    secret: process.env.SESSION_SECRET,
+//    resave: false,
+//    saveUninitialized: false
+//  }))
+//  app.use(passport.initialize())
+//  app.use(passport.session())
+//  app.use(methodOverride('_method'))
   
-  app.get('/', checkAuthenticated, (req, res) => {
-    res.render('index.ejs', { name: req.user.name })
-  })
+//  app.get('/', checkAuthenticated, (req, res) => {
+//    res.render('index.ejs', { name: req.user.name })
+//  })
   
-  app.get('/login', checkNotAuthenticated, (req, res) => {
-    res.render('login.ejs')
-  })
+//  app.get('/login', checkNotAuthenticated, (req, res) => {
+//    res.render('login.ejs')
+//  })
   
-  app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/login',
-    failureFlash: true
-  }))
+//  app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
+//    successRedirect: '/',
+//    failureRedirect: '/login',
+//    failureFlash: true
+//  }))
   
-  app.get('/register', checkNotAuthenticated, (req, res) => {
-    res.render('register.ejs')
-  })
+//  app.get('/register', checkNotAuthenticated, (req, res) => {
+//    res.render('register.ejs')
+//  })
   
-  app.post('/register', checkNotAuthenticated, async (req, res) => {
-    try {
-      const hashedPassword = await bcrypt.hash(req.body.password, 10)
-      users.push({
-        id: Date.now().toString(),
-        name: req.body.name,
-        email: req.body.email,
-        password: hashedPassword
-      })
-      res.redirect('/login')
-    } catch {
-      res.redirect('/register')
-    }
-  })
+//  app.post('/register', checkNotAuthenticated, async (req, res) => {
+//    try {
+//      const hashedPassword = await bcrypt.hash(req.body.password, 10)
+//      users.push({
+//        id: Date.now().toString(),
+//        name: req.body.name,
+//        email: req.body.email,
+//        password: hashedPassword
+//      })
+//      res.redirect('/login')
+//    } catch {
+//      res.redirect('/register')
+//    }
+//  })
   
-  app.delete('/logout', (req, res) => {
-    req.logOut()
-    res.redirect('/login')
-  })
+//  app.delete('/logout', (req, res) => {
+//    req.logOut()
+//    res.redirect('/login')
+//  })
   
-  function checkAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-      return next()
-    }
+//  function checkAuthenticated(req, res, next) {
+//    if (req.isAuthenticated()) {
+//      return next()
+//    }
   
-    res.redirect('/login')
-  }
+//    res.redirect('/login')
+//  }
   
-  function checkNotAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-      return res.redirect('/')
-    }
-    next()
-  }
+//  function checkNotAuthenticated(req, res, next) {
+//    if (req.isAuthenticated()) {
+//      return res.redirect('/')
+//    }
+//    next()
+//  }
   
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+require('dotenv').config({ path: `${__dirname}/.env` })
+
+const jwt = require('jsonwebtoken')
+
+app.use(express.json())
+
+let refreshTokens = []
+
+app.post('/token', (req, res) => {
+    const refreshToken = req.body.token
+    if (refreshToken == null) return res.sendStatus(401)
+    if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403)
+        const accessToken = generateAccessToken({ name: user.name })
+        res.json({ accessToken: accessToken })
+    })
+})
+
+app.delete('/logout', (req, res) => {
+    refreshTokens = refreshTokens.filter(token => token !== req.body.token)
+    res.sendStatus(204)
+})
+
+app.post('/login', (req, res) => {
+    // Authenticate User
+
+    const username = req.body.username
+    const user = { name: username }
+
+    const accessToken = generateAccessToken(user)
+    const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
+    refreshTokens.push(refreshToken)
+    res.json({ accessToken: accessToken, refreshToken: refreshToken })
+})
+
+function generateAccessToken(user) {
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
+}
+
+
+
 const port = process.env.PORT || 8000
 app.listen(port, () => console.log(`Listening on port ${port}...`));
