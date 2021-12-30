@@ -32,32 +32,6 @@ app.get('/', (req, res) => {
     res.send('Hello culo');
 });
 
-/*
-const corsi =
-    [
-        { id: 1, name: "igsw" },
-        {id: 2, name: "so"},
-        {id: 3, name: "mariolone bubbarello"}
-    ];
-
-app.get('/api/courses', (req, res) => {
-    res.send(corsi);
-});
-
-app.get('/api/courses/:year/:month', (req, res) => {
-    res.send(req.params);
-    //res.send(req.query); //per trovare le query dopo il ?
-   console.log("ciaone galattico!")});
-
-
-
-app.get('/api/courses/:id', (req, res) => {
-    const cor = corsi.find(c => c.id === parseInt(req.params.id))
-    if (!cor) { res.status(404).send("Stintipacchio catch phrase") }
-    else res.send(cor);
-});
-
-*/
 
 
 function Mongo() {
@@ -166,6 +140,94 @@ app.get('/mongo/getbyid/:id', (req, res) => {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+const fs = require('fs')
+
+async function getpeople()
+{
+    return new Promise((resolve, reject) => {
+        fs.readFile('../dati_persone.json', 'utf8', async (err, data) => {
+            if (err) 
+            {
+                console.error(err)
+                return
+            }
+            resolve(JSON.parse(data));
+        })
+    })
+}
+
+async function getuffici() {
+    return new Promise((resolve, reject) => {
+        fs.readFile('../dati_uffici.json', 'utf8', async (err, data) => {
+            if (err) {
+                console.error(err)
+                return
+            }
+            resolve(JSON.parse(data));
+        })
+    })
+}
+
+
+app.get('/mongo/newdata', async (req, res) => {
+    let dati_persone = '';
+    let dati_uffici = '';
+    await getpeople().then(resp => dati_persone = resp);
+    await getuffici().then(resp => dati_uffici = resp);
+
+    let collection_name = ["Uffici", "Clienti", "Dipendenti", "Manager"];
+
+    MongoClient.connect(localMongoUri, async function (err, database) {
+        if (err) throw err;
+        console.log("Database connected!");
+        var dbo = database.db("SiteDB");
+
+        for (name of collection_name) 
+        {            
+            /*//Crea le collezioni di default
+             dbo.createCollection(name, function (err, res) {
+                if (err) throw err;
+                console.log("Collection created! " + name);
+            });*/
+
+            /*dbo.collection(name).find({}).toArray(function (err, result) {
+                if (err) throw err;
+                console.log(result);
+            });*/
+
+            //Svuota le collezioni di default
+            dbo.collection(name).deleteMany({}, function (err, result) {
+                if (err) throw err;
+                console.log(result);
+            });
+        }
+        
+        dbo.collection("Uffici").insertMany(dati_uffici.Ufficio, function (err, res) {
+            if (err) throw err;
+            console.log("Number of documents inserted: " + res.insertedCount);
+        });
+
+        dbo.collection("Clienti").insertMany(dati_persone.Clienti, function (err, res) {
+            if (err) throw err;
+            console.log("Number of documents inserted: " + res.insertedCount);
+        });
+
+        dbo.collection("Dipendenti").insertMany(dati_persone.Dipendenti, function (err, res) {
+            if (err) throw err;
+            console.log("Number of documents inserted: " + res.insertedCount);
+        });
+
+        dbo.collection("Manager").insertMany(dati_persone.Manager, function (err, res) {
+            if (err) throw err;
+            console.log("Number of documents inserted: " + res.insertedCount);
+        });
+        
+    });
+    console.log("\n\n ////////////////////// \n\n")
+    res.status(200).json("Reset dei dati avvenuto correttamente");
+})
+
+
 app.post('/mongo/posthere', (req, res) => {
     if (!req.body)
     {
@@ -259,87 +321,8 @@ app.put('/mongo/puthere', (req, res) => {
 	
 });
 
-//if (process.env.NODE_ENV !== 'production') {
-//    require('dotenv').config()
-//  }
-  
-  
-//  const initializePassport = require('./passport-config')
-//  initializePassport(
-//    passport,
-//    email => users.find(user => user.email === email),
-//    id => users.find(user => user.id === id)
-//  )
-  
-//  const users = []
-  
-//  app.set('view-engine', 'ejs')
-//  app.use(express.urlencoded({ extended: false }))
-//  app.use(flash())
-//  app.use(session({
-//    secret: process.env.SESSION_SECRET,
-//    resave: false,
-//    saveUninitialized: false
-//  }))
-//  app.use(passport.initialize())
-//  app.use(passport.session())
-//  app.use(methodOverride('_method'))
-  
-//  app.get('/', checkAuthenticated, (req, res) => {
-//    res.render('index.ejs', { name: req.user.name })
-//  })
-  
-//  app.get('/login', checkNotAuthenticated, (req, res) => {
-//    res.render('login.ejs')
-//  })
-  
-//  app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
-//    successRedirect: '/',
-//    failureRedirect: '/login',
-//    failureFlash: true
-//  }))
-  
-//  app.get('/register', checkNotAuthenticated, (req, res) => {
-//    res.render('register.ejs')
-//  })
-  
-//  app.post('/register', checkNotAuthenticated, async (req, res) => {
-//    try {
-//      const hashedPassword = await bcrypt.hash(req.body.password, 10)
-//      users.push({
-//        id: Date.now().toString(),
-//        name: req.body.name,
-//        email: req.body.email,
-//        password: hashedPassword
-//      })
-//      res.redirect('/login')
-//    } catch {
-//      res.redirect('/register')
-//    }
-//  })
-  
-//  app.delete('/logout', (req, res) => {
-//    req.logOut()
-//    res.redirect('/login')
-//  })
-  
-//  function checkAuthenticated(req, res, next) {
-//    if (req.isAuthenticated()) {
-//      return next()
-//    }
-  
-//    res.redirect('/login')
-//  }
-  
-//  function checkNotAuthenticated(req, res, next) {
-//    if (req.isAuthenticated()) {
-//      return res.redirect('/')
-//    }
-//    next()
-//  }
-  
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
+//////////////////////////////////////////////////////////////////////////////////////
+//AUTH
 require('dotenv').config({ path: `${__dirname}/.env` })
 
 const jwt = require('jsonwebtoken')
