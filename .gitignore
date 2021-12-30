@@ -2,3 +2,5 @@
 .git
 /html/node_modules/
 /html/manager_dashboard/
+/html/.env
+/html/RandomCode.txt
