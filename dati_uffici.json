@@ -1,0 +1,74 @@
+{
+  "Ufficio": [
+    {
+		"nome":"Ufficio 1",
+		"indirizzo": "INDIRIZZO QUI",
+		"occupato": false,
+		"descrizione": "Descrizione 1",
+		"annotazione": "Annotazione 1",
+		"mq": 152,
+		"tier": 3,
+		"inizio": null,
+		"fine": null,
+		"intestatario": null,
+		"costo": 307,
+		"img": "IMMAGINE QUI"
+    },
+	{
+		"nome":"Ufficio 2",
+		"indirizzo": "INDIRIZZO QUI",
+		"occupato": true,
+		"descrizione": "Descrizione 2",
+		"annotazione": "Annotazione 2",
+		"mq": 86,
+		"tier": 2,
+		"inizio": null,
+		"fine": null,
+		"intestatario": null,
+		"costo": 208,
+		"img": "IMMAGINE QUI"
+    },
+	    {
+		"nome":"Ufficio 3",
+		"indirizzo": "INDIRIZZO QUI",
+		"occupato": false,
+		"descrizione": "Descrizione 3",
+		"annotazione": "Annotazione 3",
+		"mq": 78,
+		"tier": 1,
+		"inizio": null,
+		"fine": null,
+		"intestatario": null,
+		"costo": 115,
+		"img": "IMMAGINE QUI"
+    },
+	{
+		"nome":"Ufficio 4",
+		"indirizzo": "INDIRIZZO QUI",
+		"occupato": true,
+		"descrizione": "Descrizione 4",
+		"annotazione": "Annotazione 4",
+		"mq": 121,
+		"tier": 3,
+		"inizio": null,
+		"fine": null,
+		"intestatario": null,
+		"costo": 316,
+		"img": "IMMAGINE QUI"
+    },
+	{
+		"nome":"Ufficio 5",
+		"indirizzo": "INDIRIZZO QUI",
+		"occupato": false,
+		"descrizione": "Descrizione 5",
+		"annotazione": "Annotazione 5",
+		"mq": 98,
+		"tier": 2,
+		"inizio": null,
+		"fine": null,
+		"intestatario": null,
+		"costo": 231,
+		"img": "IMMAGINE QUI"
+    }
+  ]
+}
