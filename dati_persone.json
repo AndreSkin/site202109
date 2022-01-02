@@ -1,70 +1,151 @@
 {
-  "Clienti": [
+  "Clienti":[
     {
-		"nome":"Nome 1",
-		"indirizzo": "INDIRIZZO QUI",
-		"annotazione": "Annotazione 1",
-		"permessi": 1,
-		"metodo_pagamento":"CC",
-		"inizio_noleggio": null,
-		"fine_noleggio": null,
-		"num_noleggi": 5,
-		"profile_pic": "IMMAGINE QUI",
-		"psw":null,
-		"mail":"nome@cognome.it"
+      nome: 'Josep Carino',
+      indirizzo: 'Via Oslo 122',
+	  mail: 'josep@mail.com',
+	  psw: 'bucho',
+	  immagine_profilo: 'cubo.jpg',
+      metodo_pagamento: 'Mastercard',
+	  totale_pagamenti: 50,
+	  danni: 45,
+      danni_percentuale: 47,
+	  senza_danni_percentuale: 53,
+      tot: 95,
+	  numero_noleggi: 2,
+	  storico_noleggi:[
+	  {
+		  office_id: "id ufficio",
+		  inizio: 2021-06-12,
+		  fine: 2021-07-12
+	  },
+	  {
+		  office_id: "id ufficio 2",
+		  inizio: 2021-04-10,
+		  fine: 2021-15-11
+	  }]
     },
     {
-		"nome":"Nome 2",
-		"indirizzo": "INDIRIZZO QUI",
-		"annotazione": "Annotazione 1",
-		"permessi": 1,
-		"metodo_pagamento":"CD",
-		"inizio_noleggio": null,
-		"fine_noleggio": null,
-		"num_noleggi": 5,
-		"profile_pic": "IMMAGINE QUI",
-		"psw":null,
-		"mail":"nome@cognome.it"
+      nome: 'Andrew Loretty',
+      indirizzo: 'Via Grande Marco 47',
+	  mail: 'stinti@mail.com',
+	  psw: 'bucho',
+	  immagine_profilo: 'cubo.jpg',
+      metodo_pagamento: 'Visa',
+	  totale_pagamenti: 0,
+	  danni: 0,
+      danni_percentuale: 0,
+	  senza_danni_percentuale: 0,
+      tot: 0,
+	  numero_noleggi: 0,
+	  storico_noleggi:[]
     },
     {
-		"nome":"Nome 3",
-		"indirizzo": "INDIRIZZO QUI",
-		"annotazione": "Annotazione 1",
-		"permessi": 1,
-		"metodo_pagamento":"BB",
-		"inizio_noleggio": null,
-		"fine_noleggio": null,
-		"num_noleggi": 5,
-		"profile_pic": "IMMAGINE QUI",
-		"psw":null,
-		"mail":"nome@cognome.it"
+      nome: 'Mario Micci',
+      indirizzo: 'Via Calabria 23',
+	  mail: 'micci@mail.com',
+	  psw: 'bucho',
+	  immagine_profilo: 'cubo.jpg',
+      metodo_pagamento: 'Paypal',
+	  totale_pagamenti: 20,
+	  danni: 0,
+      danni_percentuale: 0,
+	  senza_danni_percentuale: 100,
+      tot: 20,
+	  numero_noleggi: 1,
+	  storico_noleggi:[
+	  {
+		  office_id: "id ufficio",
+		  inizio: 2020-03-25,
+		  fine: 2020-03-28
+	  }]
     },
     {
-		"nome":"Nome 4",
-		"indirizzo": "INDIRIZZO QUI",
-		"annotazione": "Annotazione 1",
-		"permessi": 1,
-		"metodo_pagamento":"PP",
-		"inizio_noleggio": null,
-		"fine_noleggio": null,
-		"num_noleggi": 5,
-		"profile_pic": "IMMAGINE QUI",
-		"psw":null,
-		"mail":"nome@cognome.it"
+      nome: 'Andre Skin',
+      indirizzo: 'Via del Comune 29',
+	  mail: 'skin@mail.com',
+	  psw: 'bucho',
+	  immagine_profilo: 'cubo.jpg',
+      metodo_pagamento: 'Mastercard',
+	  totale_pagamenti: 100,
+	  danni: 100,
+      danni_percentuale: 50,
+	  senza_danni_percentuale: 50,
+      tot: 200,
+	  numero_noleggi: 3,
+	  storico_noleggi:[
+	  {
+		  office_id: "id ufficio",
+		  inizio: 2021-04-12,
+		  fine: 2021-07-21
+	  },	  
+	  {
+		  office_id: "id ufficio 2",
+		  inizio: 2020-09-30,
+		  fine: 2020-12-17
+	  },
+	  {
+		  office_id: "id ufficio 3",
+		  inizio: 2019-08-19,
+		  fine: 2019-11-09
+	  }]
     },
     {
-		"nome":"Nome 5",
-		"indirizzo": "INDIRIZZO QUI",
-		"annotazione": "Annotazione 1",
-		"permessi": 1,
-		"metodo_pagamento":"CC",
-		"inizio_noleggio": null,
-		"fine_noleggio": null,
-		"num_noleggi": 5,
-		"profile_pic": "IMMAGINE QUI",
-		"psw":null,
-		"mail":"nome@cognome.it"
-    }
+      nome: 'Umberto Carduccy',
+      indirizzo: 'Via dei Poeti 68',
+	  mail: 'carduccy@mail.com',
+	  psw: 'bucho',
+	  immagine_profilo: 'cubo.jpg',
+      metodo_pagamento: 'Visa',
+	  totale_pagamenti: 50 ,
+	  danni: 45,
+      danni_percentuale: 47,
+	  senza_danni_percentuale: 53,
+      tot: 95,
+	  numero_noleggi: 2,
+	  storico_noleggi:[
+	  {
+		  office_id: "id ufficio 3",
+		  inizio: 2020-07-12,
+		  fine: 2020-09-12
+	  },
+	  {
+		  office_id: "id ufficio 4",
+		  inizio: 2021-04-10,
+		  fine: 2021-15-11
+	  }]
+    },
+    {
+      nome: 'Andrew Zecco',
+      indirizzo: 'Via della Zecca 93',
+	  mail: 'zecco@mail.com',
+	  psw: 'bucho',
+	  immagine_profilo: 'cubo.jpg',
+      metodo_pagamento: 'Amex',
+	  totale_pagamenti: 100,
+	  danni: 50,
+      danni_percentuale: 33,
+	  senza_danni_percentuale: 67,
+      tot: 150,
+	  numero_noleggi: 3,
+	  storico_noleggi:[
+	  {
+		  office_id: "id ufficio",
+		  inizio: 2022-06-12,
+		  fine: 2022-07-12
+	  },	  
+	  {
+		  office_id: "id ufficio 6",
+		  inizio: 2020-08-14,
+		  fine: 2020-08-18
+	  },
+	  {
+		  office_id: "id ufficio 2",
+		  inizio: 2018-07-13,
+		  fine: 2018-12-18
+	  }]
+    },
+
 	],
 	
 	"Dipendenti":[

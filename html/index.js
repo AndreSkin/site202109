@@ -24,7 +24,7 @@ const localMongoUri ="mongodb://localhost:27017/localtest`"
   const flash = require('express-flash')
   const session = require('express-session')
   const methodOverride = require('method-override')
-  ////////////////////////////////////////////////)
+  ////////////////////////////////////////////////
 
 app.use(express.json());
 
@@ -365,5 +365,5 @@ function generateAccessToken(user) {
 
 
 
-const port = process.env.PORT || 8000
+const port = process.env.PORT
 app.listen(port, () => console.log(`Listening on port ${port}...`));
