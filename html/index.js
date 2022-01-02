@@ -179,7 +179,7 @@ app.get('/mongo/newdata', async (req, res) => {
 
     MongoClient.connect(localMongoUri, async function (err, database) {
         if (err) throw err;
-        console.log("Database connected!");
+        console.log("DB OK - RESET DATA");
         var dbo = database.db("SiteDB");
 
         for (name of collection_name) 
@@ -221,12 +221,80 @@ app.get('/mongo/newdata', async (req, res) => {
             if (err) throw err;
             console.log("Number of documents inserted: " + res.insertedCount);
         });
-        
     });
     console.log("\n\n ////////////////////// \n\n")
     res.status(200).json("Reset dei dati avvenuto correttamente");
 })
 
+/////////////////////////////////////////////////////////////////////////////////
+//GETTER PER PERSONE E UFFICI E RELATIVI ENDPOINT
+async function people()
+{
+    let persone = []
+
+    persone.push({
+        "Clienti": '',
+        "Dipendenti": '',
+        "Manager": ''
+    });
+
+    return new Promise((resolve, reject) => {
+        MongoClient.connect(localMongoUri, async function (err, database) {
+            if (err) throw err;
+            console.log("DB OK - GET PEOPLE");
+            var dbo = database.db("SiteDB");
+
+            dbo.collection("Clienti").find({}).toArray(await function (err, result) {
+                if (err) throw err;
+                persone[0].Clienti = result;
+            });
+
+            dbo.collection("Dipendenti").find({}).toArray(await function (err, result) {
+                if (err) throw err;
+                persone[0].Dipendenti = result;
+            });
+
+            dbo.collection("Manager").find({}).toArray(await function (err, result) {
+                if (err) throw err;
+                persone[0].Manager = result;
+                resolve(persone);
+            });
+        });
+    });
+}
+
+async function offices()
+{
+    return new Promise((resolve, reject) => {
+        MongoClient.connect(localMongoUri, async function (err, database) {
+            if (err) throw err;
+            console.log("DB OK - GET OFFICES");
+            var dbo = database.db("SiteDB");
+
+            dbo.collection("Uffici").find({}).toArray(await function (err, result) {
+                if (err) throw err;
+                resolve(result)
+            });
+        });
+    });
+}
+
+app.get('/mongo/people', async (req, res) => {
+
+    let dati_persone = '';
+    await people().then(resp => dati_persone = resp);
+    res.status(200).json(dati_persone[0]);
+})
+
+app.get('/mongo/offices', async (req, res) => {
+
+    let dati_uffici = '';
+    await offices().then(resp => dati_uffici = resp);
+    res.status(200).json(dati_uffici);
+})
+
+///////////////////////////////////////////////////////////////////////////////////
+//MONGO CRUD
 
 app.post('/mongo/posthere', (req, res) => {
     if (!req.body)
