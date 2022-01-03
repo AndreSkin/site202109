@@ -3,7 +3,7 @@
     {
 		"nome":"Ufficio 1",
 		"indirizzo": "INDIRIZZO QUI",
-		"occupato": false,
+		"occupato": ['2021-12-31', '2022-01-10', '2022-01-15', '2022-01-16', '2022-01-20', '2022-01-03'],
 		"descrizione": "Descrizione 1",
 		"annotazione": "Annotazione 1",
 		"mq": 152,
@@ -17,7 +17,7 @@
 	{
 		"nome":"Ufficio 2",
 		"indirizzo": "INDIRIZZO QUI",
-		"occupato": true,
+		"occupato": [],
 		"descrizione": "Descrizione 2",
 		"annotazione": "Annotazione 2",
 		"mq": 86,
@@ -31,7 +31,7 @@
 	    {
 		"nome":"Ufficio 3",
 		"indirizzo": "INDIRIZZO QUI",
-		"occupato": false,
+		"occupato": ['2021-12-31', '2022-01-10', '2022-01-15', '2022-01-16', '2022-01-20', '2022-01-03'],
 		"descrizione": "Descrizione 3",
 		"annotazione": "Annotazione 3",
 		"mq": 78,
@@ -45,7 +45,7 @@
 	{
 		"nome":"Ufficio 4",
 		"indirizzo": "INDIRIZZO QUI",
-		"occupato": true,
+		"occupato": [],
 		"descrizione": "Descrizione 4",
 		"annotazione": "Annotazione 4",
 		"mq": 121,
@@ -59,7 +59,7 @@
 	{
 		"nome":"Ufficio 5",
 		"indirizzo": "INDIRIZZO QUI",
-		"occupato": false,
+		"occupato": ['2021-12-31', '2022-01-10', '2022-01-15', '2022-01-16', '2022-01-20', '2022-01-03'],
 		"descrizione": "Descrizione 5",
 		"annotazione": "Annotazione 5",
 		"mq": 98,
