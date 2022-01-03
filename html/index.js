@@ -293,6 +293,25 @@ app.get('/mongo/offices', async (req, res) => {
     res.status(200).json(dati_uffici);
 })
 
+app.get('/mongo/storico', async (req, res) => {
+
+    let data = '';
+    let storico = [];
+
+    await people().then(resp => data = resp);
+    
+    for(person of data[0].Clienti)
+    {
+        storico.push({
+            "Nome":person.nome,
+            "Noleggi": person.storico_noleggi[0] == undefined ? null : person.storico_noleggi
+        })
+    }
+
+    res.status(200).json(storico);
+})
+
+
 ///////////////////////////////////////////////////////////////////////////////////
 //MONGO CRUD
 
@@ -326,7 +345,6 @@ app.post('/mongo/posthere', (req, res) => {
         res.send(obj); //convenzione ritornare l'oggetto dopo post
     });
 });
-
 
 app.delete('/mongo/deletehere', (req, res) => {
     if (!req.body) {
