@@ -27,6 +27,7 @@ const localMongoUri ="mongodb://localhost:27017/localtest`"
   ////////////////////////////////////////////////
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/', (req, res) => {
     res.send('Hello culo');
