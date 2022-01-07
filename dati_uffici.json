@@ -3,7 +3,7 @@
     {
 		"nome":"Ufficio 1",
 		"indirizzo": "INDIRIZZO QUI",
-		"occupato": ['2021-12-31', '2022-01-10', '2022-01-15', '2022-01-16', '2022-01-20', '2022-01-03'],
+		"occupato": ["2021-12-31", "2022-01-10", "2022-01-15", "2022-01-16", "2022-01-20", "2022-01-03"],
 		"descrizione": "Descrizione 1",
 		"annotazione": "Annotazione 1",
 		"mq": 152,
@@ -12,7 +12,7 @@
 		"fine": null,
 		"intestatario": null,
 		"costo": 307,
-		"img": "IMMAGINE QUI"
+		"img": "img/Ufficio.jpg"
     },
 	{
 		"nome":"Ufficio 2",
@@ -26,12 +26,12 @@
 		"fine": null,
 		"intestatario": null,
 		"costo": 208,
-		"img": "IMMAGINE QUI"
+		"img": "img/Ufficio.jpg"
     },
 	    {
 		"nome":"Ufficio 3",
 		"indirizzo": "INDIRIZZO QUI",
-		"occupato": ['2021-12-31', '2022-01-10', '2022-01-15', '2022-01-16', '2022-01-20', '2022-01-03'],
+		"occupato": ["2021-12-31", "2022-01-10", "2022-01-15", "2022-01-16", "2022-01-20", "2022-01-03"],
 		"descrizione": "Descrizione 3",
 		"annotazione": "Annotazione 3",
 		"mq": 78,
@@ -40,7 +40,7 @@
 		"fine": null,
 		"intestatario": null,
 		"costo": 115,
-		"img": "IMMAGINE QUI"
+		"img": "img/Ufficio.jpg"
     },
 	{
 		"nome":"Ufficio 4",
@@ -54,12 +54,12 @@
 		"fine": null,
 		"intestatario": null,
 		"costo": 316,
-		"img": "IMMAGINE QUI"
+		"img": "img/Ufficio.jpg"
     },
 	{
 		"nome":"Ufficio 5",
 		"indirizzo": "INDIRIZZO QUI",
-		"occupato": ['2021-12-31', '2022-01-10', '2022-01-15', '2022-01-16', '2022-01-20', '2022-01-03'],
+		"occupato": ["2021-12-31", "2022-01-10", "2022-01-15", "2022-01-16", "2022-01-20", "2022-01-03"],
 		"descrizione": "Descrizione 5",
 		"annotazione": "Annotazione 5",
 		"mq": 98,
@@ -68,7 +68,7 @@
 		"fine": null,
 		"intestatario": null,
 		"costo": 231,
-		"img": "IMMAGINE QUI"
+		"img": "img/Ufficio.jpg"
     }
   ]
 }

@@ -305,7 +305,7 @@ app.get('/mongo/storico', async (req, res) => {
     {
         storico.push({
             "Nome":person.nome,
-            "Noleggi": person.storico_noleggi[0] == undefined ? null : person.storico_noleggi
+            "storico_noleggi": person.storico_noleggi[0] == undefined ? null : person.storico_noleggi
         })
     }
 
