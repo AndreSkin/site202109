@@ -231,13 +231,11 @@ app.get('/mongo/newdata', async (req, res) => {
 //GETTER PER PERSONE E UFFICI E RELATIVI ENDPOINT
 async function people()
 {
-    let persone = []
-
-    persone.push({
-        "Clienti": '',
-        "Dipendenti": '',
-        "Manager": ''
-    });
+    let persone = {
+			Clienti: [],
+			Dipendenti: [],
+			Manager: []
+		}
 
     return new Promise((resolve, reject) => {
         MongoClient.connect(localMongoUri, async function (err, database) {
@@ -247,17 +245,17 @@ async function people()
 
             dbo.collection("Clienti").find({}).toArray(await function (err, result) {
                 if (err) throw err;
-                persone[0].Clienti = result;
+                persone.Clienti = result;
             });
 
             dbo.collection("Dipendenti").find({}).toArray(await function (err, result) {
                 if (err) throw err;
-                persone[0].Dipendenti = result;
+                persone.Dipendenti = result;
             });
 
             dbo.collection("Manager").find({}).toArray(await function (err, result) {
                 if (err) throw err;
-                persone[0].Manager = result;
+                persone.Manager = result;
                 resolve(persone);
             });
         });
@@ -281,16 +279,35 @@ async function offices()
 }
 
 app.get('/mongo/people', async (req, res) => {
-
     let dati_persone = '';
-    await people().then(resp => dati_persone = resp);
-    res.status(200).json(dati_persone[0]);
+		let temp;
+		
+		await people().then(
+			resp =>
+			(!Object.values(req.query).length)?
+				 res.status(200).json(resp)
+			:	((temp = resp.Clienti.find( elem  => elem.nome == req.query.nome)) != undefined)?
+				res.status(200).json(temp)
+			: ((temp = resp.Dipendenti.find( elem  => elem.nome == req.query.nome)) != undefined)?
+				res.status(200).json(temp)
+			: ((temp = resp.Manager.find( elem  => elem.nome == req.query.nome)) != undefined)?
+				res.status(200).json(temp)
+			: 
+				res.status(404).send("non trovato")
+		);
 })
 
 app.get('/mongo/offices', async (req, res) => {
 
     let dati_uffici = '';
-    await offices().then(resp => dati_uffici = resp);
+    await offices().then(
+			resp => 
+			dati_uffici = 
+			(!Object.values(req.query).length)?
+				 resp
+			:
+				resp.find( elem  => elem.nome == req.query.nome)
+			);
     res.status(200).json(dati_uffici);
 })
 
@@ -301,7 +318,7 @@ app.get('/mongo/storico', async (req, res) => {
 
     await people().then(resp => data = resp);
     
-    for(person of data[0].Clienti)
+    for(person of data.Clienti)
     {
         storico.push({
             "Nome":person.nome,
