@@ -20,7 +20,6 @@
          "tier":3,
          "costo_base":150,
          "img":"img/Ufficio.jpg",
-         "num_noleggi":1,
          "pending":[
             {
                "cliente":"Josep Carino",
@@ -38,12 +37,11 @@
          "indirizzo":"INDIRIZZO QUI",
          "descrizione":"Descrizione 2",
          "annotazione":"Annotazione 2",
-         "stato":"buon",
+         "stato":"buono",
          "mq":247,
          "tier":3,
          "costo_base":200,
          "img":"img/Ufficio.jpg",
-         "num_noleggi":2,
          "pending":[
             {
                "cliente":"Andre Skin",
@@ -69,7 +67,6 @@
          "tier":1,
          "costo_base":65,
          "img":"img/Ufficio.jpg",
-         "num_noleggi":0,
          "pending":[
 
          ]
@@ -90,7 +87,6 @@
          "tier":2,
          "costo_base":94,
          "img":"img/Ufficio.jpg",
-         "num_noleggi":1,
          "pending":[
 
          ]
@@ -115,7 +111,6 @@
          "tier":1,
          "costo_base":30,
          "img":"img/Ufficio.jpg",
-         "num_noleggi":1,
          "pending":[
 
          ]
