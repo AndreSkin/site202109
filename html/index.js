@@ -280,21 +280,21 @@ async function offices()
 
 app.get('/mongo/people', async (req, res) => {
     let dati_persone = '';
-		let temp;
-		
-		await people().then(
-			resp =>
-			(!Object.values(req.query).length)?
-				 res.status(200).json(resp)
-			:	((temp = resp.Clienti.find( elem  => elem.nome == req.query.nome)) != undefined)?
-				res.status(200).json(temp)
-			: ((temp = resp.Dipendenti.find( elem  => elem.nome == req.query.nome)) != undefined)?
-				res.status(200).json(temp)
-			: ((temp = resp.Manager.find( elem  => elem.nome == req.query.nome)) != undefined)?
-				res.status(200).json(temp)
-			: 
-				res.status(404).send("non trovato")
-		);
+    let temp;
+
+    await people().then(
+        resp =>
+            (!Object.values(req.query).length) ?
+                res.status(200).json(resp)
+                : ((temp = resp.Clienti.find(elem => elem.nome == req.query.nome)) != undefined) ?
+                    res.status(200).json(temp)
+                    : ((temp = resp.Dipendenti.find(elem => elem.nome == req.query.nome)) != undefined) ?
+                        res.status(200).json(temp)
+                        : ((temp = resp.Manager.find(elem => elem.nome == req.query.nome)) != undefined) ?
+                            res.status(200).json(temp)
+                            :
+                            res.status(404).send("non trovato")
+    );
 })
 
 app.get('/mongo/offices', async (req, res) => {
@@ -340,27 +340,40 @@ app.post('/mongo/posthere', (req, res) => {
         res.status(400).send("input sbagliato")
         return;
     }
+    let data = req.body;
+
+    let obj = {
+            nome: data.nome,
+            indirizzo: data.indirizzo,
+            occupato:data.occupato,
+            mq: parseFloat(data.mq),
+            tier: parseFloat(data.tier),
+            stato: data.stato,
+            costo_base: parseFloat(data.costo_base),
+            img:data.img,
+            descrizione: data.descrizione,
+            annotazione: data.annotazione,
+            pending:data.pending
+    };
 
     MongoClient.connect(localMongoUri, function (err, database)
     {
         if (err) throw err;
         console.log("Database created!");
-        var dbo = database.db("mydb");
+        var dbo = database.db("SiteDB");
 
-        const obj = {
-            _id: 16,
-            name: req.body.name,
-            address: req.body.address
-        };
-        console.log(req.body);
-
-        dbo.collection("customers").insertOne(obj, function (err, res)
+        dbo.collection("Uffici").insertOne(obj, function (err, ris)
         {
-            if (err) throw err;
-            console.log("Aggiunto uno");
+            if (err){
+                //res.status(500).json("Internal server error during office addition");
+                throw err;
+                return;}
+                
+            console.log(ris);
         });
 
-        res.send(obj); //convenzione ritornare l'oggetto dopo post
+        res.status(200).json({ "msg": `Added ${data.nome}`, "fields": obj });
+
     });
 });
 
@@ -374,20 +387,21 @@ app.delete('/mongo/deletehere', (req, res) => {
     MongoClient.connect(localMongoUri, function (err, database) {
         if (err) throw err;
         console.log("Database created!");
-        var dbo = database.db("mydb");
+        var dbo = database.db("SiteDB");
 
 
-        const query = {
-            _id: 16
-        };
+        const query = {nome:req.body.nome};
         console.log(req.body);
 
-        dbo.collection("customers").deleteOne(query, function (err, res) {
-            if (err) throw err;
-            console.log("Tolto uno");
+        dbo.collection("Uffici").deleteOne(query, function (err, ris) {
+            if (err) {
+                //res.status(500).json("Internal server error during office deletion");
+                throw err; return;
+            }
+            console.log(ris);
         });
 
-        res.send(query);
+        res.status(200).json({ "msg": `Deleted ${req.body.nome}`});
 
     });
 });
@@ -399,30 +413,41 @@ app.put('/mongo/puthere', (req, res) => {
         return;
     }
 
-
-    console.log(req.body);
-    newvalue = { $set: { name: "Stinti" } };
+    let chng = req.body.ToChange
  
+    const query = {nome: chng};
+
+    let data = req.body;
+
+    let newvalue = {$set:{
+        nome: data.nome,
+        indirizzo: data.indirizzo,
+        mq: parseFloat(data.mq),
+        tier: parseFloat(data.tier),
+        stato: data.stato,
+        costo_base: parseFloat(data.costo_base),
+        descrizione: data.descrizione,
+        annotazione: data.annotazione
+        }};
+
     MongoClient.connect(localMongoUri, function (err, database) {
         if (err) throw err;
         console.log("Database created!");
-        var dbo = database.db("mydb");
+        var dbo = database.db("SiteDB");
+  
    
-        const query = {
-        _id: 16,
-        name: req.body.name,
-        address: req.body.address
-    };
+        dbo.collection("Uffici").updateOne(query, newvalue, function (err, ris) {
+            if (err) {
+                //res.status(500).json("Internal server error during office update");
+                throw err; return;
+            }
 
-        dbo.collection("customers").updateOne(query, newvalue, function (err, res) {
-            if (err) throw err;
-            console.log("Updated uno");
+            console.log(ris);
         });
 
-        res.send(query);
-
     });
-	
+    res.status(200).json({"msg":`Updated ${chng}`, "newvalue":newvalue});
+    
 });
 
 //////////////////////////////////////////////////////////////////////////////////////
