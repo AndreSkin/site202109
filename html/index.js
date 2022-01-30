@@ -6,25 +6,25 @@ var cors = require('cors');
 var MongoClient = require('mongodb').MongoClient;
 const { get } = require('mongoose');
 
-const mongoCredentials = 
+const mongoCredentials =
 {
-	user: "site202109",
-	pwd: "ahmieC6r",
-	site: "mongo_site202109"
-}  
+    user: "site202109",
+    pwd: "ahmieC6r",
+    site: "mongo_site202109"
+}
 
 const MongoUrl = "mongodb://site202109:ahmieC6r@mongo_site202109/test?retryWrites=true&w=majority";
-const localMongoUri ="mongodb://localhost:27017/localtest`"
+const localMongoUri = "mongodb://localhost:27017/localtest`"
 
 ////////////////////////////////////////////////////
-  //const express = require('express')
-  //const app = express()
-  const bcrypt = require('bcrypt')
-  const passport = require('passport')
-  const flash = require('express-flash')
-  const session = require('express-session')
-  const methodOverride = require('method-override')
-  ////////////////////////////////////////////////
+//const express = require('express')
+//const app = express()
+const bcrypt = require('bcrypt')
+const passport = require('passport')
+const flash = require('express-flash')
+const session = require('express-session')
+const methodOverride = require('method-override')
+////////////////////////////////////////////////
 
 app.use(express.json());
 app.use(cors());
@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
 function Mongo() {
     MongoClient.connect(localMongoUri, function (err, database) {
         if (err) throw err;
-        console.log("Database created!");
+        console.log("DB connected!");
         var dbo = database.db("mydb");
         var OurID = 1;
         var myobj = [
@@ -72,22 +72,19 @@ function Mongo() {
       */
 
         var query = { name: "Skin" };
-        var querynum = {name: "null"};
+        var querynum = { name: "null" };
 
-        dbo.collection("customers").find({}/*{projection: {_id:0 , name:1, address:1}}*/).toArray(function (err, result)
-        {
+        dbo.collection("customers").find({}/*{projection: {_id:0 , name:1, address:1}}*/).toArray(function (err, result) {
             if (err) throw err;
             console.log(result);
         });
 
-        dbo.collection("customers").find({}).sort({name:1}).limit(5).toArray(function (err, result)
-        {
+        dbo.collection("customers").find({}).sort({ name: 1 }).limit(5).toArray(function (err, result) {
             if (err) throw err;
             console.log(result);
         });
 
-        dbo.collection("customers").deleteMany(querynum, function (err, result)
-        {
+        dbo.collection("customers").deleteMany(querynum, function (err, result) {
             if (err) throw err;
             console.log(result);
         });
@@ -96,8 +93,7 @@ function Mongo() {
         var myquery = { name: "Mickey" };
         var newvalues = { $set: { name: "Michelone", address: "Canyon 123" } };
 
-        dbo.collection("customers").updateOne(myquery, newvalues, function (err, res)
-        {
+        dbo.collection("customers").updateOne(myquery, newvalues, function (err, res) {
             if (err) throw err;
             console.log("1 document updated");
             database.close();
@@ -108,8 +104,7 @@ function Mongo() {
     });
 }
 
-app.get('/mongo', (req, res) => 
-{
+app.get('/mongo', (req, res) => {
     res.send(Mongo());
 });
 
@@ -143,12 +138,10 @@ app.get('/mongo/getbyid/:id', (req, res) => {
 
 const fs = require('fs')
 
-async function getpeople()
-{
+async function getpeople() {
     return new Promise((resolve, reject) => {
         fs.readFile('../dati_persone.json', 'utf8', async (err, data) => {
-            if (err) 
-            {
+            if (err) {
                 console.error(err)
                 return
             }
@@ -183,8 +176,7 @@ app.get('/mongo/newdata', async (req, res) => {
         console.log("DB OK - RESET DATA");
         var dbo = database.db("SiteDB");
 
-        for (name of collection_name) 
-        {            
+        for (name of collection_name) {
             /*//Crea le collezioni di default
              dbo.createCollection(name, function (err, res) {
                 if (err) throw err;
@@ -202,7 +194,7 @@ app.get('/mongo/newdata', async (req, res) => {
                 console.log(result);
             });
         }
-        
+
         dbo.collection("Uffici").insertMany(dati_uffici.Ufficio, function (err, res) {
             if (err) throw err;
             console.log("Number of documents inserted: " + res.insertedCount);
@@ -229,13 +221,12 @@ app.get('/mongo/newdata', async (req, res) => {
 
 /////////////////////////////////////////////////////////////////////////////////
 //GETTER PER PERSONE E UFFICI E RELATIVI ENDPOINT
-async function people()
-{
+async function people() {
     let persone = {
-			Clienti: [],
-			Dipendenti: [],
-			Manager: []
-		}
+        Clienti: [],
+        Dipendenti: [],
+        Manager: []
+    }
 
     return new Promise((resolve, reject) => {
         MongoClient.connect(localMongoUri, async function (err, database) {
@@ -262,8 +253,7 @@ async function people()
     });
 }
 
-async function offices()
-{
+async function offices() {
     return new Promise((resolve, reject) => {
         MongoClient.connect(localMongoUri, async function (err, database) {
             if (err) throw err;
@@ -301,13 +291,13 @@ app.get('/mongo/offices', async (req, res) => {
 
     let dati_uffici = '';
     await offices().then(
-			resp => 
-			dati_uffici = 
-			(!Object.values(req.query).length)?
-				 resp
-			:
-				resp.find( elem  => elem.nome == req.query.nome)
-			);
+        resp =>
+            dati_uffici =
+            (!Object.values(req.query).length) ?
+                resp
+                :
+                resp.find(elem => elem.nome == req.query.nome)
+    );
     res.status(200).json(dati_uffici);
 })
 
@@ -317,11 +307,10 @@ app.get('/mongo/storico', async (req, res) => {
     let storico = [];
 
     await people().then(resp => data = resp);
-    
-    for(person of data.Clienti)
-    {
+
+    for (person of data.Clienti) {
         storico.push({
-            "Nome":person.nome,
+            "Nome": person.nome,
             "storico_noleggi": person.storico_noleggi[0] == undefined ? null : person.storico_noleggi
         })
     }
@@ -334,41 +323,85 @@ app.get('/mongo/storico', async (req, res) => {
 //MONGO CRUD
 
 app.post('/mongo/posthere', (req, res) => {
-    if (!req.body)
-    {
+    if ((!req.body) || (req.query.type == undefined)) {
         //400 Bad Request
         res.status(400).send("input sbagliato")
         return;
     }
     let data = req.body;
+    let obj = {};
+    let coll = '';
 
-    let obj = {
-            nome: data.nome,
-            indirizzo: data.indirizzo,
-            occupato:data.occupato,
-            mq: parseFloat(data.mq),
-            tier: parseFloat(data.tier),
-            stato: data.stato,
-            costo_base: parseFloat(data.costo_base),
-            img:data.img,
-            descrizione: data.descrizione,
-            annotazione: data.annotazione,
-            pending:data.pending
-    };
+    switch (req.query.type) {
+        case "uffici":
+            obj = {
+                nome: data.nome,
+                indirizzo: data.indirizzo,
+                occupato: data.occupato,
+                mq: parseFloat(data.mq),
+                tier: parseFloat(data.tier),
+                stato: data.stato,
+                costo_base: parseFloat(data.costo_base),
+                img: data.img,
+                descrizione: data.descrizione,
+                annotazione: data.annotazione,
+                pending: data.pending
+            };
+            coll = "Uffici";
+            break;
 
-    MongoClient.connect(localMongoUri, function (err, database)
-    {
+        case "user":
+            obj = {
+                nome: data.nome,
+                indirizzo: data.indirizzo,
+                mail: data.mail,
+                psw: data.psw,
+                tier_cliente: parseFloat(data.tier),
+                immagine_profilo: data.img,
+                annotazioni: data.annotazioni,
+                storico_noleggi: data.storico
+            };
+            coll = "Clienti";
+            break;
+
+        case "dipendente":
+            obj = {
+                nome: data.nome,
+                indirizzo: data.indirizzo,
+                mail: data.mail,
+                psw: data.psw
+            };
+            coll = "Dipendenti";
+            break;
+
+        case "manager":
+            obj = {
+                nome: data.nome,
+                indirizzo: data.indirizzo,
+                mail: data.mail,
+                psw: data.psw
+            };
+            coll = "Manager";
+            break;
+
+        default:
+            res.status(400).send("query errata");
+            return;
+    }
+
+
+    MongoClient.connect(localMongoUri, function (err, database) {
         if (err) throw err;
-        console.log("Database created!");
+        console.log("DB connected!");
         var dbo = database.db("SiteDB");
 
-        dbo.collection("Uffici").insertOne(obj, function (err, ris)
-        {
-            if (err){
+        dbo.collection(coll).insertOne(obj, function (err, ris) {
+            if (err) {
                 //res.status(500).json("Internal server error during office addition");
                 throw err;
-                return;}
-                
+                return;
+            }
+
             console.log(ris);
         });
 
@@ -383,17 +416,25 @@ app.delete('/mongo/deletehere', (req, res) => {
         res.status(400).send("input sbagliato")
         return;
     }
+    let coll = '';
+
+    if (req.query.type == "office") {
+        coll = "Uffici"
+    }
+    else {
+        coll = "Clienti"
+    }
+
+    let chng = req.body.nome == '' ? " " : req.body.nome;
+    const query = { nome: chng };
 
     MongoClient.connect(localMongoUri, function (err, database) {
         if (err) throw err;
-        console.log("Database created!");
+        console.log("DB connected!");
         var dbo = database.db("SiteDB");
 
 
-        const query = {nome:req.body.nome};
-        console.log(req.body);
-
-        dbo.collection("Uffici").deleteOne(query, function (err, ris) {
+        dbo.collection(coll).deleteOne(query, function (err, ris) {
             if (err) {
                 //res.status(500).json("Internal server error during office deletion");
                 throw err; return;
@@ -401,7 +442,7 @@ app.delete('/mongo/deletehere', (req, res) => {
             console.log(ris);
         });
 
-        res.status(200).json({ "msg": `Deleted ${req.body.nome}`});
+        res.status(200).json({ "msg": `Deleted ${req.body.nome}` });
 
     });
 });
@@ -413,30 +454,54 @@ app.put('/mongo/puthere', (req, res) => {
         return;
     }
 
-    let chng = req.body.ToChange
- 
-    const query = {nome: chng};
+    let newvalue = {};
+    let coll = '';
+
+    let chng = req.body.ToChange == '' ? " " : req.body.ToChange;
+
+    const query = { nome: chng };
 
     let data = req.body;
 
-    let newvalue = {$set:{
-        nome: data.nome,
-        indirizzo: data.indirizzo,
-        mq: parseFloat(data.mq),
-        tier: parseFloat(data.tier),
-        stato: data.stato,
-        costo_base: parseFloat(data.costo_base),
-        descrizione: data.descrizione,
-        annotazione: data.annotazione
-        }};
+    if (req.query.type=="office")
+    {
+        newvalue = {
+            $set: {
+                nome: data.nome,
+                indirizzo: data.indirizzo,
+                mq: parseFloat(data.mq),
+                tier: parseFloat(data.tier),
+                stato: data.stato,
+                costo_base: parseFloat(data.costo_base),
+                descrizione: data.descrizione,
+                annotazione: data.annotazione
+            }
+        };
+        coll="Uffici"
+    }
+    else 
+    {
+        newvalue = {
+            $set: {
+                nome: data.nome,
+                indirizzo: data.indirizzo,
+                mail: data.mail,
+                tier_cliente: parseFloat(data.tier),
+                annotazioni: data.annotazione
+            }
+        };
+        coll="Clienti"
+    }
+
+
 
     MongoClient.connect(localMongoUri, function (err, database) {
         if (err) throw err;
-        console.log("Database created!");
+        console.log("DB connected!");
         var dbo = database.db("SiteDB");
-  
-   
-        dbo.collection("Uffici").updateOne(query, newvalue, function (err, ris) {
+
+
+        dbo.collection(coll).updateOne(query, newvalue, function (err, ris) {
             if (err) {
                 //res.status(500).json("Internal server error during office update");
                 throw err; return;
@@ -446,8 +511,8 @@ app.put('/mongo/puthere', (req, res) => {
         });
 
     });
-    res.status(200).json({"msg":`Updated ${chng}`, "newvalue":newvalue});
-    
+    res.status(200).json({ "msg": `Updated ${chng}`, "newvalue": newvalue });
+
 });
 
 //////////////////////////////////////////////////////////////////////////////////////
