@@ -465,18 +465,39 @@ app.put('/mongo/puthere', (req, res) => {
 
     if (req.query.type=="office")
     {
-        newvalue = {
-            $set: {
-                nome: data.nome,
-                indirizzo: data.indirizzo,
-                mq: parseFloat(data.mq),
-                tier: parseFloat(data.tier),
-                stato: data.stato,
-                costo_base: parseFloat(data.costo_base),
-                descrizione: data.descrizione,
-                annotazione: data.annotazione
+        if (data.occupato == null)
+        {
+            newvalue = {
+                $set: {
+                    nome: data.nome,
+                    indirizzo: data.indirizzo,
+                    mq: parseFloat(data.mq),
+                    tier: parseFloat(data.tier),
+                    stato: data.stato,
+                    costo_base: parseFloat(data.costo_base),
+                    descrizione: data.descrizione,
+                    annotazione: data.annotazione
+                }
             }
-        };
+        }
+        else
+        {
+        newvalue = {
+                $set: {
+                    nome: data.nome,
+                    indirizzo: data.indirizzo,
+                    mq: parseFloat(data.mq),
+                    tier: parseFloat(data.tier),
+                    stato: data.stato,
+                    costo_base: parseFloat(data.costo_base),
+                    descrizione: data.descrizione,
+                    annotazione: data.annotazione
+                },
+                $push: {
+                    occupato: data.occupato
+                }
+            };
+        }
         coll="Uffici"
     }
     else 
