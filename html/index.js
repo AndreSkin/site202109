@@ -573,6 +573,58 @@ app.put('/mongo/puthere', (req, res) => {
 
 });
 
+app.put('/mongo/putpending', (req, res) => {
+    if (!req.body) {
+        //400 Bad Request
+        res.status(400).send("input sbagliato")
+        return;
+    }
+
+    let newvalue = {};
+    let chng = req.body.ToChange == '' ? " " : req.body.ToChange;
+    const query = { nome: chng };
+    let data = req.body;
+
+    if (req.query.type == "ins")
+    {
+        newvalue = {
+            $push: {
+                pending: data.pending
+            }
+        }
+    }
+    else if (req.query.type == "del")
+    {
+        newvalue = {
+            $set:{pending: []}
+        }
+    }
+    else 
+    {
+        res.status(400).send("query errata");
+    }
+
+    MongoClient.connect(localMongoUri, function (err, database) {
+        if (err) throw err;
+        console.log("DB connected!");
+        var dbo = database.db("SiteDB");
+
+        dbo.collection("Uffici").updateOne(query, newvalue, function (err, ris) {
+            if (err)
+            {
+                throw err; 
+                return;
+            }
+
+            console.log(ris);
+        });
+
+    });
+
+    res.status(200).json({ "msg": `Updated pending of ${chng}`, "newvalue": newvalue });
+
+});
+
 //////////////////////////////////////////////////////////////////////////////////////
 //AUTH
 require('dotenv').config({ path: `${__dirname}/.env` })
