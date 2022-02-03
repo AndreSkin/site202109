@@ -318,6 +318,29 @@ app.get('/mongo/storico', async (req, res) => {
     res.status(200).json(storico);
 })
 
+app.get('/mongo/pending', async (req, res) => {
+
+    let dati_uffici = '';
+    await offices().then(resp => dati_uffici = resp);
+
+    let pending_offices = [];
+
+    for(office of dati_uffici)
+    {
+        if (office.pending.length >0)
+        {
+            pending_offices.push(
+                {
+                    "Ufficio":office.nome,
+                    "Pending_info":office.pending
+                }
+            );
+        }
+    }
+
+    res.status(200).json(pending_offices);
+})
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 //MONGO CRUD
@@ -500,6 +523,21 @@ app.put('/mongo/puthere', (req, res) => {
         }
         coll="Uffici"
     }
+    else if (req.query.type == "officedisp") 
+    {
+        let d = new Date();
+        let datestring = `${d.getFullYear()}-${d.getMonth() + 1 < 10 ? `0${d.getMonth() + 1}` : d.getMonth() + 1}-${d.getDate() < 10 ? `0${d.getDate()}` : d.getDate()}`;
+        let neverdisp = {
+            "from": datestring,
+            "to": "NC"
+        }
+        newvalue = {
+            $push: {
+                occupato: neverdisp
+            }
+        };
+        coll = "Uffici"
+    }
     else 
     {
         newvalue = {
@@ -513,7 +551,6 @@ app.put('/mongo/puthere', (req, res) => {
         };
         coll="Clienti"
     }
-
 
 
     MongoClient.connect(localMongoUri, function (err, database) {
