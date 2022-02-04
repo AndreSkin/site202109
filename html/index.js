@@ -538,6 +538,18 @@ app.put('/mongo/puthere', (req, res) => {
         };
         coll = "Uffici"
     }
+    else if (req.query.type == "modcliente") 
+    {
+        newvalue = {
+            $set: {
+                nome: data.nome,
+                indirizzo: data.indirizzo,
+                mail: data.mail,
+                psw: data.psw
+            }
+        };
+        coll = "Clienti"
+    }
     else 
     {
         newvalue = {
@@ -630,8 +642,6 @@ app.put('/mongo/putpending', (req, res) => {
 require('dotenv').config({ path: `${__dirname}/.env` })
 
 const jwt = require('jsonwebtoken')
-
-app.use(express.json())
 
 let refreshTokens = []
 
