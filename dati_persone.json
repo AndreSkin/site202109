@@ -16,7 +16,7 @@
                "pagamento":79,
                "danno":26,
                "metodo_pagamento":"Mastercard",
-               "concluso":"true",
+               "concluso":"Concluso",
                "funzionario":"dipendente 1"
             },
             {
@@ -26,7 +26,7 @@
                "pagamento":84,
                "danno":7,
                "metodo_pagamento":"Visa",
-               "concluso":"true",
+               "concluso":"Concluso ma non pagato",
                "funzionario":"manager 1"
             }
          ]
@@ -47,7 +47,7 @@
                "pagamento":99,
                "danno":36,
                "metodo_pagamento":"Paypal",
-               "concluso":"true",
+               "concluso":"Concluso",
                "funzionario":"dipendente 2"
             }
          ]
@@ -68,7 +68,7 @@
                "pagamento":64,
                "danno":0,
                "metodo_pagamento":"Amex",
-               "concluso":"false",
+               "concluso":"Da iniziare",
                "funzionario":"dipendente 3"
             },
             {
@@ -78,7 +78,7 @@
                "pagamento":59,
                "danno":0,
                "metodo_pagamento":"Visa",
-               "concluso":"true",
+               "concluso":"Concluso",
                "funzionario":"dipendente 4"
             },
             {
@@ -88,7 +88,7 @@
                "pagamento":78,
                "danno":3,
                "metodo_pagamento":"Mastercard",
-               "concluso":"true",
+               "concluso":"Concluso",
                "funzionario":"dipendente 2"
             }
          ]
@@ -121,7 +121,7 @@
                "pagamento":58,
                "danno":10,
                "metodo_pagamento":"Visa",
-               "concluso":"true",
+               "concluso":"Concluso ma non pagato",
                "funzionario":"dipendente 3"
             }
          ]

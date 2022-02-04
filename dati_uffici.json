@@ -26,6 +26,12 @@
                "inizio":"2022-01-12",
                "fine":"2022-01-18",
                "costo":0
+            },
+			            {
+               "cliente":"Andrew Loretty",
+               "inizio":"2022-02-12",
+               "fine":"2022-02-18",
+               "costo":35
             }
          ]
       },
