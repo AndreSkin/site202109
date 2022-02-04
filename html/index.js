@@ -269,7 +269,6 @@ async function offices() {
 }
 
 app.get('/mongo/people', async (req, res) => {
-    let dati_persone = '';
     let temp;
 
     await people().then(
@@ -277,11 +276,11 @@ app.get('/mongo/people', async (req, res) => {
             (!Object.values(req.query).length) ?
                 res.status(200).json(resp)
                 : ((temp = resp.Clienti.find(elem => elem.nome == req.query.nome)) != undefined) ?
-                    res.status(200).json(temp)
+                    res.status(200).json({"permesso":1, "val":temp})
                     : ((temp = resp.Dipendenti.find(elem => elem.nome == req.query.nome)) != undefined) ?
-                        res.status(200).json(temp)
+                        res.status(200).json({ "permesso": 2, "val": temp })
                         : ((temp = resp.Manager.find(elem => elem.nome == req.query.nome)) != undefined) ?
-                            res.status(200).json(temp)
+                            res.status(200).json({ "permesso": 3, "val": temp })
                             :
                             res.status(404).send("non trovato")
     );
