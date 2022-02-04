@@ -22,7 +22,7 @@
             {
                "office_id":"Ufficio 2",
                "inizio":"2021-04-10",
-               "fine":"2021-15-11",
+               "fine":"2021-11-13",
                "pagamento":84,
                "danno":7,
                "metodo_pagamento":"Visa",
@@ -74,7 +74,7 @@
             {
                "office_id":"Ufficio 1",
                "inizio":"2019-04-10",
-               "fine":"2019-15-11",
+               "fine":"2019-11-15",
                "pagamento":59,
                "danno":0,
                "metodo_pagamento":"Visa",
@@ -102,6 +102,16 @@
          "annotazioni":"annotazione 4",
          "tier_cliente":0,
          "storico_noleggi":[
+			 {
+				   "office_id":"Ufficio 5",
+				   "inizio":"2022-01-10",
+				   "fine":"2022-02-18",
+				   "pagamento":94,
+				   "danno":0,
+				   "metodo_pagamento":"Mastercard",
+				   "concluso":"In corso",
+				   "funzionario":"dipendente 2"
+			 }
 
          ]
       },
