@@ -49,12 +49,7 @@
          "costo_base":200,
          "img":"img/Ufficio.jpg",
          "pending":[
-            {
-               "cliente":"Andre Skin",
-               "inizio":"2022-06-12",
-               "fine":"2022-07-12",
-               "costo":64
-            }
+
          ]
       },
       {
