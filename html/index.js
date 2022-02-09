@@ -272,18 +272,19 @@ app.get('/mongo/people', async (req, res) => {
     let temp;
 
     await people().then(
-        resp =>
-            (!Object.values(req.query).length) ?
+        resp => {
+            if (!Object.values(req.query).length) {
                 res.status(200).json(resp)
-                : ((temp = resp.Clienti.find(elem => elem.nome == req.query.nome)) != undefined) ?
-                    res.status(200).json({"permesso":1, "val":temp})
-                    : ((temp = resp.Dipendenti.find(elem => elem.nome == req.query.nome)) != undefined) ?
-                        res.status(200).json({ "permesso": 2, "val": temp })
-                        : ((temp = resp.Manager.find(elem => elem.nome == req.query.nome)) != undefined) ?
-                            res.status(200).json({ "permesso": 3, "val": temp })
-                            :
-                            res.status(404).send("non trovato")
-    );
+            } else if ((temp = resp.Clienti.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) {
+                res.status(200).json({ "permesso": 1, "val": temp })
+            } else if ((temp = resp.Dipendenti.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) {
+                res.status(200).json({ "permesso": 2, "val": temp })
+            } else if ((temp = resp.Manager.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) {
+                res.status(200).json({ "permesso": 3, "val": temp })
+            } else {
+                res.status(404).send("non trovato")
+            }
+        });
 })
 
 app.get('/mongo/offices', async (req, res) => {
@@ -513,9 +514,7 @@ app.put('/mongo/puthere', (req, res) => {
                     stato: data.stato,
                     costo_base: parseFloat(data.costo_base),
                     descrizione: data.descrizione,
-                    annotazione: data.annotazione
-                },
-                $push: {
+                    annotazione: data.annotazione,
                     occupato: data.occupato
                 }
             };
