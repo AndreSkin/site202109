@@ -145,25 +145,25 @@
          "psw":"bucho_dip"
       },
       {
-         "nome":"Dipendente 1",
+         "nome":"Dipendente 2",
          "indirizzo":"Via dei dipendenti 2",
          "mail":"dip2@mail.com",
          "psw":"bucho_dip"
       },
       {
-         "nome":"Dipendente 1",
-         "indirizzo":"Via dei dipendenti 3",
-         "mail":"dip3@mail.com",
-         "psw":"bucho_dip"
-      },
-      {
-         "nome":"Dipendente 1",
+         "nome":"Dipendente 3",
          "indirizzo":"Via dei dipendenti 3",
          "mail":"dip3@mail.com",
          "psw":"bucho_dip"
       },
       {
          "nome":"Dipendente 4",
+         "indirizzo":"Via dei dipendenti 3",
+         "mail":"dip3@mail.com",
+         "psw":"bucho_dip"
+      },
+      {
+         "nome":"Dipendente 5",
          "indirizzo":"Via dei dipendenti 4",
          "mail":"dip4@mail.com",
          "psw":"bucho_dip"
