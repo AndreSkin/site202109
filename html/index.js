@@ -1,3 +1,4 @@
+global.rootDir = __dirname;
 const express = require('express');
 const app = express();
 var cors = require('cors');
@@ -28,9 +29,16 @@ const methodOverride = require('method-override')
 
 app.use(express.json());
 app.use(cors());
+app.use('/management' , express.static(global.rootDir + '/public/Dashboard'));
 
-app.get('/', (req, res) => {
+app.get('/' , (req, res) => {
     res.send('Hello culo');
+});
+
+app.get('/management' , (req, res) => {
+    res.sendFile(
+        global.rootDir + '/public/Dashboard/index.html'
+    )
 });
 
 
