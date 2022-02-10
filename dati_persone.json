@@ -17,7 +17,7 @@
                "danno":26,
                "metodo_pagamento":"Mastercard",
                "concluso":"Concluso",
-               "funzionario":"dipendente 1"
+               "funzionario":"Dipendente 1"
             },
             {
                "office_id":"Ufficio 2",
@@ -48,7 +48,7 @@
                "danno":36,
                "metodo_pagamento":"Paypal",
                "concluso":"Concluso",
-               "funzionario":"dipendente 2"
+               "funzionario":"Dipendente 2"
             }
          ]
       },
@@ -69,7 +69,7 @@
                "danno":0,
                "metodo_pagamento":"Amex",
                "concluso":"Da iniziare",
-               "funzionario":"dipendente 3"
+               "funzionario":"Dipendente 3"
             },
             {
                "office_id":"Ufficio 1",
@@ -79,7 +79,7 @@
                "danno":0,
                "metodo_pagamento":"Visa",
                "concluso":"Concluso",
-               "funzionario":"dipendente 4"
+               "funzionario":"Dipendente 4"
             },
             {
                "office_id":"Ufficio 4",
@@ -89,7 +89,7 @@
                "danno":3,
                "metodo_pagamento":"Mastercard",
                "concluso":"Concluso",
-               "funzionario":"dipendente 2"
+               "funzionario":"Dipendente 2"
             }
          ]
       },
@@ -110,7 +110,7 @@
 				   "danno":0,
 				   "metodo_pagamento":"Mastercard",
 				   "concluso":"In corso",
-				   "funzionario":"dipendente 2"
+				   "funzionario":"Dipendente 2"
 			 }
 
          ]
@@ -132,7 +132,7 @@
                "danno":10,
                "metodo_pagamento":"Visa",
                "concluso":"Concluso ma non pagato",
-               "funzionario":"dipendente 3"
+               "funzionario":"Dipendente 3"
             }
          ]
       }
