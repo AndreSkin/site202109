@@ -30,6 +30,7 @@ const methodOverride = require('method-override')
 app.use(express.json());
 app.use(cors());
 app.use('/management' , express.static(global.rootDir + '/public/Dashboard'));
+app.use('/backoffice' , express.static(global.rootDir + '/public/Back'));
 
 app.get('/' , (req, res) => {
     res.send('Hello world');
@@ -38,6 +39,12 @@ app.get('/' , (req, res) => {
 app.get('/management' , (req, res) => {
     res.sendFile(
         global.rootDir + '/public/Dashboard/index.html'
+    )
+});
+
+app.get('/backoffice' , (req, res) => {
+    res.sendFile(
+        global.rootDir + '/public/Back/Back_front.html'
     )
 });
 
