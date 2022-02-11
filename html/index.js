@@ -32,7 +32,7 @@ app.use(cors());
 app.use('/management' , express.static(global.rootDir + '/public/Dashboard'));
 
 app.get('/' , (req, res) => {
-    res.send('Hello culo');
+    res.send('Hello world');
 });
 
 app.get('/management' , (req, res) => {
@@ -40,107 +40,6 @@ app.get('/management' , (req, res) => {
         global.rootDir + '/public/Dashboard/index.html'
     )
 });
-
-
-
-function Mongo() {
-    MongoClient.connect(localMongoUri, function (err, database) {
-        if (err) throw err;
-        console.log("DB connected!");
-        var dbo = database.db("mydb");
-        var OurID = 1;
-        var myobj = [
-            { name: "Skin", address: "Via delle vie 1", _id: OurID++ },
-            { name: 'John', address: 'Highway 71', _id: OurID++ },
-            { name: 'Peter', address: 'Lowstreet 4', _id: OurID++ },
-            { name: 'Amy', address: 'Apple st 652', _id: OurID++ },
-            { name: 'Hannah', address: 'Mountain 21', _id: OurID++ },
-            { name: 'Michael', address: 'Valley 345', _id: OurID++ },
-            { name: 'Sandy', address: 'Ocean blvd 2', _id: OurID++ },
-            { name: 'Betty', address: 'Green Grass 1', _id: OurID++ },
-            { name: 'Richard', address: 'Sky st 331', _id: OurID++ },
-            { name: 'Susan', address: 'One way 98', _id: OurID++ },
-            { name: 'Vicky', address: 'Yellow Garden 2', _id: OurID++ },
-            { name: 'Ben', address: 'Park Lane 38', _id: OurID++ },
-            { name: 'William', address: 'Central st 954', _id: OurID++ },
-            { name: 'Chuck', address: 'Main Road 989', _id: OurID++ },
-            { name: 'Viola', address: 'Sideway 1633', _id: OurID }
-        ];
-
-        /*
-        dbo.createCollection("customers", function (err, res) {
-            if (err) throw err;
-            console.log("Collection created!");
-        });
- 
-        dbo.collection("customers").insertMany(myobj, function (err, res) {
-            if (err) throw err;
-            console.log("Number of documents inserted: " + res.insertedCount);
-        });
-      */
-
-        var query = { name: "Skin" };
-        var querynum = { name: "null" };
-
-        dbo.collection("customers").find({}/*{projection: {_id:0 , name:1, address:1}}*/).toArray(function (err, result) {
-            if (err) throw err;
-            console.log(result);
-        });
-
-        dbo.collection("customers").find({}).sort({ name: 1 }).limit(5).toArray(function (err, result) {
-            if (err) throw err;
-            console.log(result);
-        });
-
-        dbo.collection("customers").deleteMany(querynum, function (err, result) {
-            if (err) throw err;
-            console.log(result);
-        });
-
-
-        var myquery = { name: "Mickey" };
-        var newvalues = { $set: { name: "Michelone", address: "Canyon 123" } };
-
-        dbo.collection("customers").updateOne(myquery, newvalues, function (err, res) {
-            if (err) throw err;
-            console.log("1 document updated");
-            database.close();
-        });
-
-        /*Drop per cancellare collezione*/
-
-    });
-}
-
-app.get('/mongo', (req, res) => {
-    res.send(Mongo());
-});
-
-
-app.get('/mongo/getbyid/:id', (req, res) => {
-    MongoClient.connect(localMongoUri, function (err, database) {
-        if (err) throw err;
-        console.log("Database creato!");
-        var dbo = database.db("mydb");
-        console.log()
-        var myid = parseInt(req.params.id);
-        let query = {};
-        query['_id'] = myid;
-
-        dbo.collection("customers").count({}, function (err, ris) {
-            if (err) throw err;
-            console.log(ris);
-        });
-
-        dbo.collection("customers").findOne(query, function (err, result) {
-            if (err) throw err;
-            console.log("Trovato uno");
-            console.log(result);
-            res.send(result);
-        });
-    });
-});
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -281,17 +180,26 @@ app.get('/mongo/people', async (req, res) => {
 
     await people().then(
         resp => {
-            if (!Object.values(req.query).length) {
-                res.status(200).json(resp)
-            } else if ((temp = resp.Clienti.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) {
-                res.status(200).json({ "permesso": 1, "val": temp })
-            } else if ((temp = resp.Dipendenti.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) {
-                res.status(200).json({ "permesso": 2, "val": temp })
-            } else if ((temp = resp.Manager.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) {
-                res.status(200).json({ "permesso": 3, "val": temp })
-            } else {
-                res.status(404).send("non trovato")
-            }
+                if (!Object.values(req.query).length) 
+                {
+                    res.status(200).json(resp)
+                } 
+                else if ((temp = resp.Clienti.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) 
+                {
+                    res.status(200).json({ "permesso": 1, "val": temp })
+                }
+                else if ((temp = resp.Dipendenti.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) 
+                {
+                    res.status(200).json({ "permesso": 2, "val": temp })
+                } 
+                else if ((temp = resp.Manager.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) 
+                {
+                    res.status(200).json({ "permesso": 3, "val": temp })
+                } 
+                else 
+                {
+                    res.status(404).send("non trovato")
+                }
         });
 })
 
@@ -299,12 +207,7 @@ app.get('/mongo/offices', async (req, res) => {
 
     let dati_uffici = '';
     await offices().then(
-        resp =>
-            dati_uffici =
-            (!Object.values(req.query).length) ?
-                resp
-                :
-                resp.find(elem => elem.nome == req.query.nome)
+        resp => dati_uffici = (!Object.values(req.query).length) ? resp : resp.find(elem => elem.nome == req.query.nome)
     );
     res.status(200).json(dati_uffici);
 })
@@ -316,7 +219,8 @@ app.get('/mongo/storico', async (req, res) => {
 
     await people().then(resp => data = resp);
 
-    for (person of data.Clienti) {
+    for (person of data.Clienti)
+    {
         storico.push({
             "Nome": person.nome,
             "storico_noleggi": person.storico_noleggi[0] == undefined ? null : person.storico_noleggi
@@ -567,6 +471,22 @@ app.put('/mongo/puthere', (req, res) => {
 
 });
 
+
+//TODO: prendere date inizio e fine e metterle in occupato
+/*
+ data: {
+    ToChange: this.cliente.nome,
+    pending: {
+        "office_id": this.data.nome,
+        "inizio": this.pick[0],
+        "fine": this.pick[1] || this.pick[0],
+        "pagamento": this.fattura[13].val,
+        "danno": 0,
+        "concluso": this.today === this.pick[0] ? "In corso" : "Da iniziare",
+        "funzionario": this.NomeCliente === "" ? "" : this.user
+    }
+}
+ */
 app.put('/mongo/putpending', (req, res) => {
     if (!req.body) {
         //400 Bad Request
