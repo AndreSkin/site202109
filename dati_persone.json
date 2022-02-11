@@ -62,16 +62,6 @@
          "tier_cliente":5,
          "storico_noleggi":[
             {
-               "office_id":"Ufficio 2",
-               "inizio":"2022-06-12",
-               "fine":"2022-07-12",
-               "pagamento":64,
-               "danno":0,
-               "metodo_pagamento":"Amex",
-               "concluso":"Da iniziare",
-               "funzionario":"Dipendente 3"
-            },
-            {
                "office_id":"Ufficio 1",
                "inizio":"2019-04-10",
                "fine":"2019-11-15",
@@ -80,6 +70,16 @@
                "metodo_pagamento":"Visa",
                "concluso":"Concluso",
                "funzionario":"Dipendente 4"
+            },
+			            {
+               "office_id":"Ufficio 2",
+               "inizio":"2022-06-12",
+               "fine":"2022-07-12",
+               "pagamento":64,
+               "danno":0,
+               "metodo_pagamento":"Amex",
+               "concluso":"Da iniziare",
+               "funzionario":"Dipendente 3"
             },
             {
                "office_id":"Ufficio 4",
