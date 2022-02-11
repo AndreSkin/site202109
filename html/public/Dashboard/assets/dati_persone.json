@@ -1,0 +1,134 @@
+{
+  "Clienti": [
+    {
+		"nome":"Nome 1",
+		"indirizzo": "INDIRIZZO QUI",
+		"annotazione": "Annotazione 1",
+		"permessi": 1,
+		"metodo_pagamento":"CC",
+		"inizio_noleggio": null,
+		"fine_noleggio": null,
+		"num_noleggi": 5,
+		"profile_pic": "IMMAGINE QUI",
+		"psw":null,
+		"mail":"nome@cognome.it"
+    },
+    {
+		"nome":"Nome 2",
+		"indirizzo": "INDIRIZZO QUI",
+		"annotazione": "Annotazione 1",
+		"permessi": 1,
+		"metodo_pagamento":"CD",
+		"inizio_noleggio": null,
+		"fine_noleggio": null,
+		"num_noleggi": 5,
+		"profile_pic": "IMMAGINE QUI",
+		"psw":null,
+		"mail":"nome@cognome.it"
+    },
+    {
+		"nome":"Nome 3",
+		"indirizzo": "INDIRIZZO QUI",
+		"annotazione": "Annotazione 1",
+		"permessi": 1,
+		"metodo_pagamento":"BB",
+		"inizio_noleggio": null,
+		"fine_noleggio": null,
+		"num_noleggi": 5,
+		"profile_pic": "IMMAGINE QUI",
+		"psw":null,
+		"mail":"nome@cognome.it"
+    },
+    {
+		"nome":"Nome 4",
+		"indirizzo": "INDIRIZZO QUI",
+		"annotazione": "Annotazione 1",
+		"permessi": 1,
+		"metodo_pagamento":"PP",
+		"inizio_noleggio": null,
+		"fine_noleggio": null,
+		"num_noleggi": 5,
+		"profile_pic": "IMMAGINE QUI",
+		"psw":null,
+		"mail":"nome@cognome.it"
+    },
+    {
+		"nome":"Nome 5",
+		"indirizzo": "INDIRIZZO QUI",
+		"annotazione": "Annotazione 1",
+		"permessi": 1,
+		"metodo_pagamento":"CC",
+		"inizio_noleggio": null,
+		"fine_noleggio": null,
+		"num_noleggi": 5,
+		"profile_pic": "IMMAGINE QUI",
+		"psw":null,
+		"mail":"nome@cognome.it"
+    }
+	],
+
+	"Dipendenti":[
+		{
+		"nome":"Dip 1",
+		"indirizzo": "INDIRIZZO QUI",
+		"permessi": 2,
+		"filiale":"Bologna",
+		"pratiche_chiuse":5,
+		"badge_pic": "IMMAGINE QUI",
+		"psw":null,
+		"mail":"nome@cognome.it"
+    },
+	{
+		"nome":"Dip 2",
+		"indirizzo": "INDIRIZZO QUI",
+		"permessi": 2,
+		"filiale":"Bologna",
+		"pratiche_chiuse":7,
+		"badge_pic": "IMMAGINE QUI",
+		"psw":null,
+		"mail":"nome@cognome.it"
+    },
+	{
+		"nome":"Dip 3",
+		"indirizzo": "INDIRIZZO QUI",
+		"permessi": 2,
+		"filiale":"Firenze",
+		"pratiche_chiuse":4,
+		"badge_pic": "IMMAGINE QUI",
+		"psw":null,
+		"mail":"nome@cognome.it"
+    },
+	{
+		"nome":"Dip 4",
+		"indirizzo": "INDIRIZZO QUI",
+		"permessi": 2,
+		"filiale":"Firenze",
+		"pratiche_chiuse":9,
+		"badge_pic": "IMMAGINE QUI",
+		"psw":null,
+		"mail":"nome@cognome.it"
+    }
+	],
+
+	"Manager":[
+	{
+		"nome":"Mg 1",
+		"indirizzo": "INDIRIZZO QUI",
+		"permessi": 3,
+		"filiale":"Bologna",
+		"badge_pic": "IMMAGINE QUI",
+		"psw":null,
+		"mail":"nome@cognome.it"
+    },
+	{
+		"nome":"Mg 2",
+		"indirizzo": "INDIRIZZO QUI",
+		"permessi": 3,
+		"filiale":"Firenze",
+		"badge_pic": "IMMAGINE QUI",
+		"psw":null,
+		"mail":"nome@cognome.it"
+    }
+	]
+}
+
