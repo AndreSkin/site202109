@@ -508,9 +508,9 @@ app.put('/mongo/putpending', (req, res) => {
     let ins = false;
 
 
-    let office = data.office_id;
-    let start = data.inizio;
-    let end = data.fine;
+    let office = data.pending.office_id;
+    let start = data.pending.inizio;
+    let end = data.pending.fine;
 
 
     if (req.query.type == "ins")
@@ -581,7 +581,7 @@ app.put('/mongo/putpending', (req, res) => {
 
 });
 
-
+/*TODO modificare date in occupato*/
 app.put('/mongo/putnoleggi', (req, res) => {
     if (!req.body) {
         //400 Bad Request
@@ -609,12 +609,31 @@ app.put('/mongo/putnoleggi', (req, res) => {
     };
 
 
+    query_occ = { nome: data.office, occupato: { $elemMatch: { from: { $in: arr_start }, to: { $in: arr_end } } } };
+
+    new_occ={
+        $set:{
+            occupato: { "from": data.inizio, "to": data.fine }
+        }
+     }
+
+
+
     MongoClient.connect(localMongoUri, function (err, database) {
         if (err) throw err;
         console.log("DB connected!");
         var dbo = database.db("SiteDB");
 
         dbo.collection("Clienti").updateOne(query, newval, function (err, ris) {
+            if (err) {
+                throw err;
+                return;
+            }
+
+            console.log(ris);
+        });
+        
+        dbo.collection("Uffici").updateOne(query_occ, new_occ, function (err, ris) {
             if (err) {
                 throw err;
                 return;
