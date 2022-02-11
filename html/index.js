@@ -500,6 +500,12 @@ app.put('/mongo/putpending', (req, res) => {
     let data = req.body;
     let ins = false;
 
+
+    let office = data.office_id;
+    let start = data.inizio;
+    let end = data.fine;
+
+
     if (req.query.type == "ins")
     {
         ins = true;
@@ -509,10 +515,6 @@ app.put('/mongo/putpending', (req, res) => {
                 storico_noleggi: data.pending
             }
         }
-
-        let office = data.office_id;
-        let start = data.inizio;
-        let end = data.fine;
 
         let office_query = { nome: office };
 
@@ -524,9 +526,14 @@ app.put('/mongo/putpending', (req, res) => {
     }
     else if (req.query.type == "del")
     {
+        let arr_inizio = [];
+        let arr_fine = [];
+        arr_inizio.push(start);
+        arr_fine.push(end);
+
         newvalue = {
-            $set: { storico_noleggi: []}
-        }
+            $pull: {occupato: { $elemMatch: {from: { $in: arr_inizio }, to: { $in: arr_fine } } }}
+            }
     }
     else 
     {
