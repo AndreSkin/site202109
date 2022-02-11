@@ -19,21 +19,8 @@
          "mq":152,
          "tier":3,
          "costo_base":150,
-         "img":"img/Ufficio.jpg",
-         "pending":[
-            {
-               "cliente":"Josep Carino",
-               "inizio":"2022-01-12",
-               "fine":"2022-01-18",
-               "costo":0
-            },
-			            {
-               "cliente":"Andrew Loretty",
-               "inizio":"2022-02-12",
-               "fine":"2022-02-18",
-               "costo":35
-            }
-         ]
+         "img":"img/Ufficio.jpg"
+         
       },
       {
          "nome":"Ufficio 2",
@@ -47,10 +34,8 @@
          "mq":247,
          "tier":3,
          "costo_base":200,
-         "img":"img/Ufficio.jpg",
-         "pending":[
-
-         ]
+         "img":"img/Ufficio.jpg"
+         
       },
       {
          "nome":"Ufficio 3",
@@ -67,11 +52,8 @@
          "mq":56,
          "tier":1,
          "costo_base":65,
-         "img":"img/Ufficio.jpg",
-         "pending":[
-
-         ]
-      },
+         "img":"img/Ufficio.jpg"
+	  },
       {
          "nome":"Ufficio 4",
          "occupato":[
@@ -87,10 +69,7 @@
          "mq":112,
          "tier":2,
          "costo_base":94,
-         "img":"img/Ufficio.jpg",
-         "pending":[
-
-         ]
+         "img":"img/Ufficio.jpg"
       },
       {
          "nome":"Ufficio 5",
@@ -111,10 +90,7 @@
          "mq":54,
          "tier":1,
          "costo_base":30,
-         "img":"img/Ufficio.jpg",
-         "pending":[
-
-         ]
+         "img":"img/Ufficio.jpg"
       }
-   ]
+	]
 }
