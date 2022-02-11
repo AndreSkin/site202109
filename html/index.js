@@ -608,15 +608,17 @@ app.put('/mongo/putnoleggi', (req, res) => {
             }
     };
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////77
 
-    query_occ = { nome: data.office, occupato: { $elemMatch: { from: { $in: arr_start }, to: { $in: arr_end } } } };
+    const query_occ = { nome: data.office, occupato: { $elemMatch: { from: { $in: arr_start }, to: { $in: arr_end } } } };
 
-    new_occ={
-        $set:{
-            occupato: { "from": data.inizio, "to": data.fine }
+
+    const new_occ={
+        $set: {
+            "occupato.$.from": data.inizio,
+            "occupato.$.to": data.fine
         }
-     }
-
+     }    
 
 
     MongoClient.connect(localMongoUri, function (err, database) {
