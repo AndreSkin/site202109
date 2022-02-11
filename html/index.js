@@ -326,30 +326,6 @@ app.get('/mongo/storico', async (req, res) => {
     res.status(200).json(storico);
 })
 
-app.get('/mongo/pending', async (req, res) => {
-
-    let dati_uffici = '';
-    await offices().then(resp => dati_uffici = resp);
-
-    let pending_offices = [];
-
-    for(office of dati_uffici)
-    {
-        if (office.pending.length >0)
-        {
-            pending_offices.push(
-                {
-                    "Ufficio":office.nome,
-                    "Pending_info":office.pending
-                }
-            );
-        }
-    }
-
-    res.status(200).json(pending_offices);
-})
-
-
 ///////////////////////////////////////////////////////////////////////////////////
 //MONGO CRUD
 
@@ -607,14 +583,14 @@ app.put('/mongo/putpending', (req, res) => {
     {
         newvalue = {
             $push: {
-                pending: data.pending
+                storico_noleggi: data.pending
             }
         }
     }
     else if (req.query.type == "del")
     {
         newvalue = {
-            $set:{pending: []}
+            $set: { storico_noleggi: []}
         }
     }
     else 
@@ -627,7 +603,7 @@ app.put('/mongo/putpending', (req, res) => {
         console.log("DB connected!");
         var dbo = database.db("SiteDB");
 
-        dbo.collection("Uffici").updateOne(query, newvalue, function (err, ris) {
+        dbo.collection("Clienti").updateOne(query, newvalue, function (err, ris) {
             if (err)
             {
                 throw err; 
@@ -642,6 +618,53 @@ app.put('/mongo/putpending', (req, res) => {
     res.status(200).json({ "msg": `Updated pending of ${chng}`, "newvalue": newvalue });
 
 });
+
+
+app.put('/mongo/putnoleggi', (req, res) => {
+    if (!req.body) {
+        //400 Bad Request
+        res.status(400).send("input sbagliato")
+        return;
+    }
+    let data = req.body;
+
+    let arr_off = [];
+    let arr_start = [];
+    let arr_end = [];
+
+    arr_off.push(data.office);
+    arr_start.push(data.or_inizio);
+    arr_end.push(data.or_fine);
+
+    const query = { nome: data.nome, storico_noleggi: { $elemMatch: { office_id: { $in: arr_off }, inizio: { $in: arr_start }, fine: { $in: arr_end } } } };
+    
+    const newval = {
+        $set: { 
+            "storico_noleggi.$.inizio": data.inizio ,
+            "storico_noleggi.$.fine": data.fine ,
+            "storico_noleggi.$.pagamento": data.costo 
+            }
+    };
+
+
+    MongoClient.connect(localMongoUri, function (err, database) {
+        if (err) throw err;
+        console.log("DB connected!");
+        var dbo = database.db("SiteDB");
+
+        dbo.collection("Clienti").updateOne(query, newval, function (err, ris) {
+            if (err) {
+                throw err;
+                return;
+            }
+
+            console.log(ris);
+        });
+
+    });
+    res.status(200).json("Noleggio modificato");
+
+})
 
 //////////////////////////////////////////////////////////////////////////////////////
 //AUTH
