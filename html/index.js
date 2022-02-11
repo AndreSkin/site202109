@@ -31,9 +31,12 @@ app.use(express.json());
 app.use(cors());
 app.use('/management' , express.static(global.rootDir + '/public/Dashboard'));
 app.use('/backoffice' , express.static(global.rootDir + '/public/Back'));
+app.use('/' , express.static(global.rootDir + '/public/Front'));
 
 app.get('/' , (req, res) => {
-    res.send('Hello world');
+    res.sendFile(
+        global.rootDir + '/public/Front/index.html'
+    )
 });
 
 app.get('/management' , (req, res) => {
@@ -730,5 +733,5 @@ function generateAccessToken(user) {
 
 
 
-const port = process.env.PORT
+const port = process.env.PORT || 8000
 app.listen(port, () => console.log(`Listening on port ${port}...`));
