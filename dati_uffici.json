@@ -25,7 +25,10 @@
       {
          "nome":"Ufficio 2",
          "occupato":[
-
+			{
+               "from":"2022-06-12",
+               "to":"2022-07-12"
+            },
          ],
          "indirizzo":"INDIRIZZO QUI",
          "descrizione":"Descrizione 2",
