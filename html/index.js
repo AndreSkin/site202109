@@ -498,12 +498,27 @@ app.put('/mongo/putpending', (req, res) => {
     let chng = req.body.ToChange == '' ? " " : req.body.ToChange;
     const query = { nome: chng };
     let data = req.body;
+    let ins = false;
 
     if (req.query.type == "ins")
     {
+        ins = true;
+
         newvalue = {
             $push: {
                 storico_noleggi: data.pending
+            }
+        }
+
+        let office = data.office_id;
+        let start = data.inizio;
+        let end = data.fine;
+
+        let office_query = { nome: office };
+
+        let office_values = {
+            $push: {
+                occupato: {"from":start, "to":end}
             }
         }
     }
@@ -531,7 +546,20 @@ app.put('/mongo/putpending', (req, res) => {
             }
 
             console.log(ris);
-        });
+        });   
+        
+        if(ins)
+        {
+            dbo.collection("Uffici").updateOne(office_query, office_values, function (err, ris) {
+                if (err)
+                {
+                    throw err; 
+                    return;
+                }
+
+                console.log(ris);
+            });
+        }
 
     });
 
