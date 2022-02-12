@@ -1,5 +1,5 @@
-//var serverUrl = "https://site202109.tw.cs.unibo.it/";
-var serverUrl = "https://localhost:8000/";
+var serverUrl = "https://site202109.tw.cs.unibo.it/";
+//var serverUrl = "https://localhost:8000/";
 
 $(document).ready(function(){setactive_side("home")})
 
