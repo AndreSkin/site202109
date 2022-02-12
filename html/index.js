@@ -14,17 +14,16 @@ const mongoCredentials =
     site: "mongo_site202109"
 }
 
-const localMongoUri = "mongodb://site202109:ahmieC6r@mongo_site202109/test?retryWrites=true&w=majority";
+const localMongoUri = "mongodb://site202109:ahmieC6r@mongo_site202109?writeConcern=majority";
 //const localMongoUri = "mongodb://localhost:27017/localtest`"
 
 ////////////////////////////////////////////////////
 //const express = require('express')
 //const app = express()
-const bcrypt = require('bcrypt')
-const passport = require('passport')
-const flash = require('express-flash')
-const session = require('express-session')
-const methodOverride = require('method-override')
+//const passport = require('passport')
+//const flash = require('express-flash')
+//const session = require('express-session')
+//const methodOverride = require('method-override')
 ////////////////////////////////////////////////
 
 app.use(express.json());
