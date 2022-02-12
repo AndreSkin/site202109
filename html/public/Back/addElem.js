@@ -77,7 +77,7 @@ async function addPerson() {
     "mail": $(`#mail`).val(),
     "psw": "default",
     "tier":"0",
-    "img": "img/avatar.jpg",
+    "img": "../img/avatar.jpg",
     "annotazioni": "",
     "storico": []
 };
@@ -195,7 +195,7 @@ async function addoffice()
     "tier":$(`#tier`).val(),
     "stato":$(`#stato`).val(),
     "costo_base":$(`#costo`).val(),
-    "img":"img/Ufficio.jpg",
+    "img":"../img/Ufficio.jpg",
     "descrizione":$(`#desc`).val(),
     "annotazione":$(`#ann`).val(),
     "pending":[]
