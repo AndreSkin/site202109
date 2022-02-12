@@ -14,8 +14,8 @@ const mongoCredentials =
     site: "mongo_site202109"
 }
 
-const MongoUrl = "mongodb://site202109:ahmieC6r@mongo_site202109/test?retryWrites=true&w=majority";
-const localMongoUri = "mongodb://localhost:27017/localtest`"
+const localMongoUri = "mongodb://site202109:ahmieC6r@mongo_site202109/test?retryWrites=true&w=majority";
+//const localMongoUri = "mongodb://localhost:27017/localtest`"
 
 ////////////////////////////////////////////////////
 //const express = require('express')
@@ -31,9 +31,10 @@ app.use(express.json());
 app.use(cors());
 app.use('/management' , express.static(global.rootDir + '/public/Dashboard'));
 app.use('/backoffice' , express.static(global.rootDir + '/public/Back'));
-app.use('/' , express.static(global.rootDir + '/public/Front'));
+app.use('/', express.static(global.rootDir + '/public/Front'));
 
-app.get('/' , (req, res) => {
+
+app.get('/', (req, res) => {
     res.sendFile(
         global.rootDir + '/public/Front/index.html'
     )
@@ -55,6 +56,7 @@ app.get('/backoffice' , (req, res) => {
 
 const fs = require('fs')
 
+/*Per ragioni di debug si possono prendere i dati anche da file json*/
 async function getpeople() {
     return new Promise((resolve, reject) => {
         fs.readFile('../dati_persone.json', 'utf8', async (err, data) => {
@@ -79,8 +81,32 @@ async function getuffici() {
     })
 }
 
+/*Endpoint di creazione delle collezioni base*/
+app.get('/mongo/collections', async (req, res) => {
+    let collection_name = ["Uffici", "Clienti", "Dipendenti", "Manager"];
 
-app.get('/mongo/newdata', async (req, res) => {
+    MongoClient.connect(localMongoUri, async function (err, database) {
+        if (err) throw err;
+        console.log("DB OK - RESET DATA");
+        var dbo = database.db("SiteDB");
+
+        for (name of collection_name) {
+            //Crea le collezioni di default
+            dbo.createCollection(name, function (err, res) {
+                if (err) throw err;
+                console.log("Collection created! " + name);
+            });
+
+            dbo.collection(name).find({}).toArray(function (err, result) {
+                if (err) throw err;
+                console.log(result);
+            });
+        }
+    });
+});
+
+/*Endpoint per eliminare tutti i dati*/
+app.get('/mongo/dropdata', async (req, res) => {
     let dati_persone = '';
     let dati_uffici = '';
     await getpeople().then(resp => dati_persone = resp);
@@ -94,45 +120,14 @@ app.get('/mongo/newdata', async (req, res) => {
         var dbo = database.db("SiteDB");
 
         for (name of collection_name) {
-            /*//Crea le collezioni di default
-             dbo.createCollection(name, function (err, res) {
-                if (err) throw err;
-                console.log("Collection created! " + name);
-            });*/
-
-            /*dbo.collection(name).find({}).toArray(function (err, result) {
-                if (err) throw err;
-                console.log(result);
-            });*/
-
             //Svuota le collezioni di default
             dbo.collection(name).deleteMany({}, function (err, result) {
                 if (err) throw err;
                 console.log(result);
             });
         }
-
-        dbo.collection("Uffici").insertMany(dati_uffici.Ufficio, function (err, res) {
-            if (err) throw err;
-            console.log("Number of documents inserted: " + res.insertedCount);
-        });
-
-        dbo.collection("Clienti").insertMany(dati_persone.Clienti, function (err, res) {
-            if (err) throw err;
-            console.log("Number of documents inserted: " + res.insertedCount);
-        });
-
-        dbo.collection("Dipendenti").insertMany(dati_persone.Dipendenti, function (err, res) {
-            if (err) throw err;
-            console.log("Number of documents inserted: " + res.insertedCount);
-        });
-
-        dbo.collection("Manager").insertMany(dati_persone.Manager, function (err, res) {
-            if (err) throw err;
-            console.log("Number of documents inserted: " + res.insertedCount);
-        });
     });
-    console.log("\n\n ////////////////////// \n\n")
+    console.log("\n ////////////////////// \n")
     res.status(200).json("Reset dei dati avvenuto correttamente");
 })
 
@@ -185,6 +180,7 @@ async function offices() {
     });
 }
 
+/*Endpoint che pemette di ottenere tutte le persone o solo i dati di una*/
 app.get('/mongo/people', async (req, res) => {
     let temp;
 
@@ -213,6 +209,7 @@ app.get('/mongo/people', async (req, res) => {
         });
 })
 
+/*Endpoint che pemette di ottenere tutti gli uffici o solo i dati di uno*/
 app.get('/mongo/offices', async (req, res) => {
 
     let dati_uffici = '';
@@ -222,6 +219,7 @@ app.get('/mongo/offices', async (req, res) => {
     res.status(200).json(dati_uffici);
 })
 
+/*Endpoint che restituisce ogni persona con il suo storico noleggi*/
 app.get('/mongo/storico', async (req, res) => {
 
     let data = '';
@@ -240,6 +238,7 @@ app.get('/mongo/storico', async (req, res) => {
     res.status(200).json(storico);
 })
 
+/*Endpoint che restituisce un array di festività arbitrarie per il calcolo degli sconti*/
 app.get('/feste', async (req, res) => {
     let feste = [
         "2022-01-01",
@@ -282,6 +281,7 @@ app.get('/feste', async (req, res) => {
 ///////////////////////////////////////////////////////////////////////////////////
 //MONGO CRUD
 
+/*POST: per l'inserimento di nuovi dati nel DB*/
 app.post('/mongo/posthere', (req, res) => {
     if ((!req.body) || (req.query.type == undefined)) {
         //400 Bad Request
@@ -293,6 +293,7 @@ app.post('/mongo/posthere', (req, res) => {
     let coll = '';
 
     switch (req.query.type) {
+        /*Inserimento di un ufficio*/
         case "uffici":
             obj = {
                 nome: data.nome,
@@ -309,7 +310,7 @@ app.post('/mongo/posthere', (req, res) => {
             };
             coll = "Uffici";
             break;
-
+        /*Inserimento di un utente*/
         case "user":
             obj = {
                 nome: data.nome,
@@ -323,7 +324,7 @@ app.post('/mongo/posthere', (req, res) => {
             };
             coll = "Clienti";
             break;
-
+        /*Inserimento di un dipendente*/
         case "dipendente":
             obj = {
                 nome: data.nome,
@@ -333,7 +334,7 @@ app.post('/mongo/posthere', (req, res) => {
             };
             coll = "Dipendenti";
             break;
-
+        /*Inserimento di un manager*/
         case "manager":
             obj = {
                 nome: data.nome,
@@ -370,6 +371,7 @@ app.post('/mongo/posthere', (req, res) => {
     });
 });
 
+/*DELETE: per l'eliminazione di dati dal DB*/
 app.delete('/mongo/deletehere', (req, res) => {
     if (!req.body) {
         //400 Bad Request
@@ -385,6 +387,7 @@ app.delete('/mongo/deletehere', (req, res) => {
         coll = "Clienti"
     }
 
+    /*Elemento da eliminare*/
     let chng = req.body.nome == '' ? " " : req.body.nome;
     const query = { nome: chng };
 
@@ -396,17 +399,16 @@ app.delete('/mongo/deletehere', (req, res) => {
 
         dbo.collection(coll).deleteOne(query, function (err, ris) {
             if (err) {
-                //res.status(500).json("Internal server error during office deletion");
                 throw err; return;
             }
             console.log(ris);
         });
 
         res.status(200).json({ "msg": `Deleted ${req.body.nome}` });
-
     });
 });
 
+/*PUT: per la modifica dei dati nel DB*/
 app.put('/mongo/puthere', (req, res) => {
     if (!req.body) {
         //400 Bad Request
@@ -422,9 +424,10 @@ app.put('/mongo/puthere', (req, res) => {
     const query = { nome: chng };
 
     let data = req.body;
-
+    /*Modifica uffici*/
     if (req.query.type=="office")
     {
+        /*Non è necessario modificare la disponibilità*/
         if (data.occupato == null)
         {
             newvalue = {
@@ -452,12 +455,13 @@ app.put('/mongo/puthere', (req, res) => {
                     costo_base: parseFloat(data.costo_base),
                     descrizione: data.descrizione,
                     annotazione: data.annotazione,
-                    occupato: data.occupato
+                    occupato: data.occupato /*Modifica della disponibilità*/
                 }
             };
         }
         coll="Uffici"
     }
+    /*L'ufficio deve essere reso non disponibile fino a nuova comunicazione*/
     else if (req.query.type == "officedisp") 
     {
         let d = new Date();
@@ -473,6 +477,8 @@ app.put('/mongo/puthere', (req, res) => {
         };
         coll = "Uffici"
     }
+    /*Modifica dei clienti*/
+    /*Da parte del cliente (psw modificabile)*/
     else if (req.query.type == "modcliente") 
     {
         newvalue = {
@@ -485,6 +491,7 @@ app.put('/mongo/puthere', (req, res) => {
         };
         coll = "Clienti"
     }
+   /*Modifica clienti da parte del back office*/
     else 
     {
         newvalue = {
@@ -508,7 +515,6 @@ app.put('/mongo/puthere', (req, res) => {
 
         dbo.collection(coll).updateOne(query, newvalue, function (err, ris) {
             if (err) {
-                //res.status(500).json("Internal server error during office update");
                 throw err; return;
             }
 
@@ -520,22 +526,7 @@ app.put('/mongo/puthere', (req, res) => {
 
 });
 
-
-//TODO: prendere date inizio e fine e metterle in occupato
-/*
- data: {
-    ToChange: this.cliente.nome,
-    pending: {
-        "office_id": this.data.nome,
-        "inizio": this.pick[0],
-        "fine": this.pick[1] || this.pick[0],
-        "pagamento": this.fattura[13].val,
-        "danno": 0,
-        "concluso": this.today === this.pick[0] ? "In corso" : "Da iniziare",
-        "funzionario": this.NomeCliente === "" ? "" : this.user
-    }
-}
- */
+/*Modifica dello storico noleggi e conseguente aggiornamento delle date di disponibilità*/
 app.put('/mongo/putpending', (req, res) => {
     if (!req.body) {
         //400 Bad Request
@@ -554,7 +545,7 @@ app.put('/mongo/putpending', (req, res) => {
     let start = data.pending.inizio;
     let end = data.pending.fine;
 
-
+    /*Nuovo noleggio*/
     if (req.query.type == "ins")
     {
         ins = true;
@@ -566,13 +557,14 @@ app.put('/mongo/putpending', (req, res) => {
         }
 
         let office_query = { nome: office };
-
+        /*Nuove date*/
         let office_values = {
             $push: {
                 occupato: {"from":start, "to":end}
             }
         }
     }
+    /*Eliminazione di un noleggio*/
     else if (req.query.type == "del")
     {
         let arr_inizio = [];
@@ -623,7 +615,7 @@ app.put('/mongo/putpending', (req, res) => {
 
 });
 
-/*TODO modificare date in occupato*/
+/*Modiifca di un noleggio in corso e della relativa disponibilità*/
 app.put('/mongo/putnoleggi', (req, res) => {
     if (!req.body) {
         //400 Bad Request
@@ -642,6 +634,7 @@ app.put('/mongo/putnoleggi', (req, res) => {
 
     const query = { nome: data.nome, storico_noleggi: { $elemMatch: { office_id: { $in: arr_off }, inizio: { $in: arr_start }, fine: { $in: arr_end } } } };
     
+    /*campo.$ = first match*/
     const newval = {
         $set: { 
             "storico_noleggi.$.inizio": data.inizio ,
@@ -733,5 +726,5 @@ function generateAccessToken(user) {
 
 
 
-const port = process.env.PORT || 8000
+const port = process.env.PORT||8000
 app.listen(port, () => console.log(`Listening on port ${port}...`));

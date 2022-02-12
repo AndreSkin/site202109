@@ -190,8 +190,6 @@ await $.ajax({
       setTimeout(function(){$(".fail_upd").remove()}, 10000);
      }
    });
-
-
 }
 
 async function showstory()
