@@ -89,7 +89,6 @@ async function modnolo(i)
     dati.push(data[j].split(': ')[1]!= undefined ? data[j].split(': ')[1].trim():data[j].split(': ')[0].trim());
   };
 
-  const dateoptions = {year: 'numeric', month: 'numeric', day: 'numeric' };
   let d = new Date();
   let datestring = `${d.getFullYear()}-${d.getMonth()+1 < 10? `0${d.getMonth()+1}`:d.getMonth()+1}-${d.getDate() < 10? `0${d.getDate()}`:d.getDate()}`;
 

@@ -111,9 +111,6 @@ app.get('/mongo/collections', async (req, res) => {
 
 /*Endpoint per eliminare tutti i dati*/
 app.get('/mongo/dropdata', async (req, res) => {
-    let dati_persone = '';
-    let dati_uffici = '';
-
     let collection_name = ["Uffici", "Clienti", "Dipendenti", "Manager"];
 
     MongoClient.connect(localMongoUri, async function (err, database) {
@@ -131,6 +128,43 @@ app.get('/mongo/dropdata', async (req, res) => {
     });
     console.log("\n ////////////////////// \n")
     res.status(200).json("Reset dei dati avvenuto correttamente");
+})
+
+/*Endpoint per eliminare tutti i dati persone*/
+app.get('/mongo/droppeople', async (req, res) => {
+    let collection_name = ["Clienti", "Dipendenti", "Manager"];
+
+    MongoClient.connect(localMongoUri, async function (err, database) {
+        if (err) throw err;
+        console.log("DB OK - RESET DATA");
+        var dbo = database.db("SiteDB");
+
+        for (name of collection_name) {
+            dbo.collection(name).deleteMany({}, function (err, result) {
+                if (err) throw err;
+                console.log(result);
+            });
+        }
+    });
+    console.log("\n ////////////////////// \n")
+    res.status(200).json("Reset dei dati persone avvenuto correttamente");
+})
+
+/*Endpoint per eliminare tutti i dati uffici*/
+app.get('/mongo/dropoffices', async (req, res) => {
+
+    MongoClient.connect(localMongoUri, async function (err, database) {
+        if (err) throw err;
+        console.log("DB OK - RESET DATA");
+        var dbo = database.db("SiteDB");
+
+            dbo.collection("Uffici").deleteMany({}, function (err, result) {
+                if (err) throw err;
+                console.log(result);
+            });
+    });
+    console.log("\n ////////////////////// \n")
+    res.status(200).json("Reset dei dati uffici avvenuto correttamente");
 })
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -301,8 +335,8 @@ app.post('/mongo/posthere', (req, res) => {
                 costo_base: parseFloat(data.costo_base),
                 img: data.img,
                 descrizione: data.descrizione,
-                annotazione: data.annotazione,
-                pending: data.pending
+                annotazione: data.annotazione == ""?"Nessuna annotazione":data.annotazione,
+                insertion: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
             };
             coll = "Uffici";
             break;
@@ -314,7 +348,7 @@ app.post('/mongo/posthere', (req, res) => {
                 mail: data.mail,
                 psw: data.psw,
                 tier_cliente: parseFloat(data.tier),
-                immagine_profilo: data.img,
+                img: data.img,
                 annotazioni: data.annotazioni,
                 storico_noleggi: data.storico
             };
@@ -354,7 +388,6 @@ app.post('/mongo/posthere', (req, res) => {
 
         dbo.collection(coll).insertOne(obj, function (err, ris) {
             if (err) {
-                //res.status(500).json("Internal server error during office addition");
                 throw err;
                 return;
             }

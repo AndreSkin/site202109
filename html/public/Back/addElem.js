@@ -166,7 +166,7 @@ async function renderaddOffice() {
     </div>
 
 <div class="disponibilita">
-    <button type="button" class="btn btn-success disp-btn" onclick="disp(${-1})">Modifica disponibilitÃ </button>
+    <button type="button" class="btn btn-success disp-btn" onclick="disp(${-1})">Modifica disponibilità </button>
 </div>
 
         <button type="submit" class="btn btn-primary" onclick="addoffice()">Aggiungi</button>
@@ -174,6 +174,7 @@ async function renderaddOffice() {
     </form>
   `);
     $("input").attr("required", true);
+    $("#ann").attr("required", false);
 
     $("form").submit(function (e) {
         e.preventDefault();
@@ -181,10 +182,16 @@ async function renderaddOffice() {
 }
 
 async function addoffice() {
+    let occupato = [];
+
+    if ($("#start0").val() != undefined && $("#end0").val() != undefined) 
+    {
+        occupato.push({ "from": $("#start0").val(), "to": $("#end0").val() })
+    }
     let formdata = {
         "nome": $(`#name`).val(),
         "indirizzo": $(`#address`).val(),
-        "occupato": [],
+        "occupato": occupato,
         "mq": $(`#mq`).val(),
         "tier": $(`#tier`).val(),
         "stato": $(`#stato`).val(),
@@ -192,7 +199,6 @@ async function addoffice() {
         "img": "../img/Ufficio.jpg",
         "descrizione": $(`#desc`).val(),
         "annotazione": $(`#ann`).val(),
-        "pending": []
     };
 
     for (input of $("input")) {
