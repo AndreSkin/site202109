@@ -1,6 +1,5 @@
 
-async function renderAddelem()
-{
+async function renderAddelem() {
     $("#textdiv").empty();
     $("#textdiv").append(`
       <h3>Aggiungi un utente o un ufficio</h3>
@@ -9,10 +8,9 @@ async function renderAddelem()
       `)
 }
 
-async function renderaddPerson(type)
-{
-  $("#textdiv").empty();
-  $("#textdiv").append(`
+async function renderaddPerson(type) {
+    $("#textdiv").empty();
+    $("#textdiv").append(`
     <h3>Aggiungi un utente</h3>
 
     <div class="form-check">
@@ -60,60 +58,57 @@ async function renderaddPerson(type)
 </form>
 `);
 
-  $("form input").attr("required", true);
+    $("form input").attr("required", true);
 
-  $("form").submit(function(e) {
-    e.preventDefault();
-  });
+    $("form").submit(function (e) {
+        e.preventDefault();
+    });
 
 }
 async function addPerson() {
 
-  let chkd= $("input[type='radio']:checked").val();
+    let chkd = $("input[type='radio']:checked").val();
 
-  let persondata ={
-    "nome":$(`#name`).val(),
-    "indirizzo":$(`#address`).val(),
-    "mail": $(`#mail`).val(),
-    "psw": "default",
-    "tier":"0",
-    "img": "../img/avatar.jpg",
-    "annotazioni": "",
-    "storico": []
-};
+    let persondata = {
+        "nome": $(`#name`).val(),
+        "indirizzo": $(`#address`).val(),
+        "mail": $(`#mail`).val(),
+        "psw": "default",
+        "tier": "0",
+        "img": "../img/avatar.jpg",
+        "annotazioni": "",
+        "storico": []
+    };
 
-  for(input of $("input"))
-  {
-    if (!(input.checkValidity()))
-    {
-      $(input).css({"border":"1px solid red"});
-      return;
+    for (input of $("input")) {
+        if (!(input.checkValidity())) {
+            $(input).css({ "border": "1px solid red" });
+            return;
+        }
     }
-  }
 
-await $.ajax({
-    url: serverUrl + `mongo/posthere?type=${chkd}`,
-    type: 'POST',
-    data: JSON.stringify(persondata),
-    crossDomain: true,
-    contentType: 'application/json',
-    success: async function (data) {
-      await renderAddelem();
-      $("#textdiv").prepend(`<div class="success_upd">${data.msg}</div>`);
-      setTimeout(function(){$(".success_upd").remove()}, 10000);
-    },
-    error: function(data) {
-      $("#textdiv").prepend(`<div class="fail_upd">${data}</div>`);
-      setTimeout(function(){$(".fail_upd").remove()}, 10000);
-     }
-});
+    await $.ajax({
+        url: serverUrl + `mongo/posthere?type=${chkd}`,
+        type: 'POST',
+        data: JSON.stringify(persondata),
+        crossDomain: true,
+        contentType: 'application/json',
+        success: async function (data) {
+            await renderAddelem();
+            $("#textdiv").prepend(`<div class="success_upd">${data.msg}</div>`);
+            setTimeout(function () { $(".success_upd").remove() }, 10000);
+        },
+        error: function (data) {
+            $("#textdiv").prepend(`<div class="fail_upd">${data}</div>`);
+            setTimeout(function () { $(".fail_upd").remove() }, 10000);
+        }
+    });
 
 }
 
-async function renderaddOffice()
-{
-  $("#textdiv").empty();
-  $("#textdiv").append(`
+async function renderaddOffice() {
+    $("#textdiv").empty();
+    $("#textdiv").append(`
     <h3>Aggiungi un ufficio</h3>
 
     <form>
@@ -171,60 +166,57 @@ async function renderaddOffice()
     </div>
 
 <div class="disponibilita">
-    <button type="button" class="btn btn-success disp-btn" onclick="disp(${-1})">Modifica disponibilità</button>
+    <button type="button" class="btn btn-success disp-btn" onclick="disp(${-1})">Modifica disponibilitÃ </button>
 </div>
 
         <button type="submit" class="btn btn-primary" onclick="addoffice()">Aggiungi</button>
         <button type="button" class="btn btn-warning" onclick="renderAddelem()">Annulla</button>
     </form>
   `);
-$("input").attr("required", true);
+    $("input").attr("required", true);
 
-$("form").submit(function(e) {
-    e.preventDefault();
-});
+    $("form").submit(function (e) {
+        e.preventDefault();
+    });
 }
 
-async function addoffice()
-{
-  let formdata= {
-    "nome":$(`#name`).val(),
-    "indirizzo":$(`#address`).val(),
-    "occupato":[],
-    "mq":$(`#mq`).val(),
-    "tier":$(`#tier`).val(),
-    "stato":$(`#stato`).val(),
-    "costo_base":$(`#costo`).val(),
-    "img":"../img/Ufficio.jpg",
-    "descrizione":$(`#desc`).val(),
-    "annotazione":$(`#ann`).val(),
-    "pending":[]
-  };
+async function addoffice() {
+    let formdata = {
+        "nome": $(`#name`).val(),
+        "indirizzo": $(`#address`).val(),
+        "occupato": [],
+        "mq": $(`#mq`).val(),
+        "tier": $(`#tier`).val(),
+        "stato": $(`#stato`).val(),
+        "costo_base": $(`#costo`).val(),
+        "img": "../img/Ufficio.jpg",
+        "descrizione": $(`#desc`).val(),
+        "annotazione": $(`#ann`).val(),
+        "pending": []
+    };
 
-  for(input of $("input"))
-  {
-    if (!(input.checkValidity()))
-    {
-      $(input).css({"border":"1px solid red"});
-      return;
+    for (input of $("input")) {
+        if (!(input.checkValidity())) {
+            $(input).css({ "border": "1px solid red" });
+            return;
+        }
     }
-  }
 
-await $.ajax({
-    url: serverUrl + "mongo/posthere?type=uffici",
-    type: 'POST',
-    data: JSON.stringify(formdata),
-    crossDomain: true,
-    contentType: 'application/json',
-    success: function (data) {
-      renderAddelem();
-      $("#textdiv").prepend(`<div class="success_upd">${data.msg}</div>`);
-      setTimeout(function(){$(".success_upd").remove()}, 10000);
-    },
-    error: function(data) {
-      $("#textdiv").prepend(`<div class="fail_upd">${data}</div>`);
-      setTimeout(function(){$(".fail_upd").remove()}, 10000);
-     }
-});
+    await $.ajax({
+        url: serverUrl + "mongo/posthere?type=uffici",
+        type: 'POST',
+        data: JSON.stringify(formdata),
+        crossDomain: true,
+        contentType: 'application/json',
+        success: function (data) {
+            renderAddelem();
+            $("#textdiv").prepend(`<div class="success_upd">${data.msg}</div>`);
+            setTimeout(function () { $(".success_upd").remove() }, 10000);
+        },
+        error: function (data) {
+            $("#textdiv").prepend(`<div class="fail_upd">${data}</div>`);
+            setTimeout(function () { $(".fail_upd").remove() }, 10000);
+        }
+    });
 
 }

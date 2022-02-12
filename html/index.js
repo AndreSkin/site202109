@@ -28,10 +28,15 @@ const localMongoUri = "mongodb://site202109:ahmieC6r@mongo_site202109?writeConce
 
 app.use(express.json());
 app.use(cors());
-app.use('/management' , express.static(global.rootDir + '/public/Dashboard'));
-app.use('/backoffice' , express.static(global.rootDir + '/public/Back'));
-app.use('/', express.static(global.rootDir + '/public/Front'));
 
+app.use(express.static(global.rootDir + 'public'));
+app.use(express.static(global.rootDir + 'public/img'));
+
+app.use('/img', express.static(global.rootDir + '/public/img'));
+
+app.use('/management', express.static(global.rootDir + '/public/Dashboard'));
+app.use('/backoffice', express.static(global.rootDir + '/public/Back'));
+app.use('/', express.static(global.rootDir + '/public/Front'));
 
 app.get('/', (req, res) => {
     res.sendFile(
@@ -39,13 +44,13 @@ app.get('/', (req, res) => {
     )
 });
 
-app.get('/management' , (req, res) => {
+app.get('/management', (req, res) => {
     res.sendFile(
         global.rootDir + '/public/Dashboard/index.html'
     )
 });
 
-app.get('/backoffice' , (req, res) => {
+app.get('/backoffice', (req, res) => {
     res.sendFile(
         global.rootDir + '/public/Back/Back_front.html'
     )
@@ -108,8 +113,6 @@ app.get('/mongo/collections', async (req, res) => {
 app.get('/mongo/dropdata', async (req, res) => {
     let dati_persone = '';
     let dati_uffici = '';
-    await getpeople().then(resp => dati_persone = resp);
-    await getuffici().then(resp => dati_uffici = resp);
 
     let collection_name = ["Uffici", "Clienti", "Dipendenti", "Manager"];
 
@@ -185,26 +188,21 @@ app.get('/mongo/people', async (req, res) => {
 
     await people().then(
         resp => {
-                if (!Object.values(req.query).length) 
-                {
-                    res.status(200).json(resp)
-                } 
-                else if ((temp = resp.Clienti.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) 
-                {
-                    res.status(200).json({ "permesso": 1, "val": temp })
-                }
-                else if ((temp = resp.Dipendenti.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) 
-                {
-                    res.status(200).json({ "permesso": 2, "val": temp })
-                } 
-                else if ((temp = resp.Manager.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) 
-                {
-                    res.status(200).json({ "permesso": 3, "val": temp })
-                } 
-                else 
-                {
-                    res.status(404).send("non trovato")
-                }
+            if (!Object.values(req.query).length) {
+                res.status(200).json(resp)
+            }
+            else if ((temp = resp.Clienti.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) {
+                res.status(200).json({ "permesso": 1, "val": temp })
+            }
+            else if ((temp = resp.Dipendenti.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) {
+                res.status(200).json({ "permesso": 2, "val": temp })
+            }
+            else if ((temp = resp.Manager.find(elem => elem.nome == req.query.nome || elem.mail == req.query.mail)) != undefined) {
+                res.status(200).json({ "permesso": 3, "val": temp })
+            }
+            else {
+                res.status(404).send("non trovato")
+            }
         });
 })
 
@@ -226,8 +224,7 @@ app.get('/mongo/storico', async (req, res) => {
 
     await people().then(resp => data = resp);
 
-    for (person of data.Clienti)
-    {
+    for (person of data.Clienti) {
         storico.push({
             "Nome": person.nome,
             "storico_noleggi": person.storico_noleggi[0] == undefined ? null : person.storico_noleggi
@@ -237,7 +234,7 @@ app.get('/mongo/storico', async (req, res) => {
     res.status(200).json(storico);
 })
 
-/*Endpoint che restituisce un array di festività arbitrarie per il calcolo degli sconti*/
+/*Endpoint che restituisce un array di festivitÃ  arbitrarie per il calcolo degli sconti*/
 app.get('/feste', async (req, res) => {
     let feste = [
         "2022-01-01",
@@ -424,11 +421,9 @@ app.put('/mongo/puthere', (req, res) => {
 
     let data = req.body;
     /*Modifica uffici*/
-    if (req.query.type=="office")
-    {
-        /*Non è necessario modificare la disponibilità*/
-        if (data.occupato == null)
-        {
+    if (req.query.type == "office") {
+        /*Non Ã¨ necessario modificare la disponibilitÃ */
+        if (data.occupato == null) {
             newvalue = {
                 $set: {
                     nome: data.nome,
@@ -442,9 +437,8 @@ app.put('/mongo/puthere', (req, res) => {
                 }
             }
         }
-        else
-        {
-        newvalue = {
+        else {
+            newvalue = {
                 $set: {
                     nome: data.nome,
                     indirizzo: data.indirizzo,
@@ -454,15 +448,14 @@ app.put('/mongo/puthere', (req, res) => {
                     costo_base: parseFloat(data.costo_base),
                     descrizione: data.descrizione,
                     annotazione: data.annotazione,
-                    occupato: data.occupato /*Modifica della disponibilità*/
+                    occupato: data.occupato /*Modifica della disponibilitÃ */
                 }
             };
         }
-        coll="Uffici"
+        coll = "Uffici"
     }
     /*L'ufficio deve essere reso non disponibile fino a nuova comunicazione*/
-    else if (req.query.type == "officedisp") 
-    {
+    else if (req.query.type == "officedisp") {
         let d = new Date();
         let datestring = `${d.getFullYear()}-${d.getMonth() + 1 < 10 ? `0${d.getMonth() + 1}` : d.getMonth() + 1}-${d.getDate() < 10 ? `0${d.getDate()}` : d.getDate()}`;
         let neverdisp = {
@@ -478,8 +471,7 @@ app.put('/mongo/puthere', (req, res) => {
     }
     /*Modifica dei clienti*/
     /*Da parte del cliente (psw modificabile)*/
-    else if (req.query.type == "modcliente") 
-    {
+    else if (req.query.type == "modcliente") {
         newvalue = {
             $set: {
                 nome: data.nome,
@@ -490,9 +482,8 @@ app.put('/mongo/puthere', (req, res) => {
         };
         coll = "Clienti"
     }
-   /*Modifica clienti da parte del back office*/
-    else 
-    {
+    /*Modifica clienti da parte del back office*/
+    else {
         newvalue = {
             $set: {
                 nome: data.nome,
@@ -502,7 +493,7 @@ app.put('/mongo/puthere', (req, res) => {
                 annotazioni: data.annotazione
             }
         };
-        coll="Clienti"
+        coll = "Clienti"
     }
 
 
@@ -525,7 +516,7 @@ app.put('/mongo/puthere', (req, res) => {
 
 });
 
-/*Modifica dello storico noleggi e conseguente aggiornamento delle date di disponibilità*/
+/*Modifica dello storico noleggi e conseguente aggiornamento delle date di disponibilitÃ */
 app.put('/mongo/putpending', (req, res) => {
     if (!req.body) {
         //400 Bad Request
@@ -545,8 +536,7 @@ app.put('/mongo/putpending', (req, res) => {
     let end = data.pending.fine;
 
     /*Nuovo noleggio*/
-    if (req.query.type == "ins")
-    {
+    if (req.query.type == "ins") {
         ins = true;
 
         newvalue = {
@@ -559,24 +549,22 @@ app.put('/mongo/putpending', (req, res) => {
         /*Nuove date*/
         let office_values = {
             $push: {
-                occupato: {"from":start, "to":end}
+                occupato: { "from": start, "to": end }
             }
         }
     }
     /*Eliminazione di un noleggio*/
-    else if (req.query.type == "del")
-    {
+    else if (req.query.type == "del") {
         let arr_inizio = [];
         let arr_fine = [];
         arr_inizio.push(start);
         arr_fine.push(end);
 
         newvalue = {
-            $pull: {occupato: { $elemMatch: {from: { $in: arr_inizio }, to: { $in: arr_fine } } }}
-            }
+            $pull: { occupato: { $elemMatch: { from: { $in: arr_inizio }, to: { $in: arr_fine } } } }
+        }
     }
-    else 
-    {
+    else {
         res.status(400).send("query errata");
     }
 
@@ -586,21 +574,18 @@ app.put('/mongo/putpending', (req, res) => {
         var dbo = database.db("SiteDB");
 
         dbo.collection("Clienti").updateOne(query, newvalue, function (err, ris) {
-            if (err)
-            {
-                throw err; 
+            if (err) {
+                throw err;
                 return;
             }
 
             console.log(ris);
-        });   
-        
-        if(ins)
-        {
+        });
+
+        if (ins) {
             dbo.collection("Uffici").updateOne(office_query, office_values, function (err, ris) {
-                if (err)
-                {
-                    throw err; 
+                if (err) {
+                    throw err;
                     return;
                 }
 
@@ -614,7 +599,7 @@ app.put('/mongo/putpending', (req, res) => {
 
 });
 
-/*Modiifca di un noleggio in corso e della relativa disponibilità*/
+/*Modiifca di un noleggio in corso e della relativa disponibilitÃ */
 app.put('/mongo/putnoleggi', (req, res) => {
     if (!req.body) {
         //400 Bad Request
@@ -632,14 +617,14 @@ app.put('/mongo/putnoleggi', (req, res) => {
     arr_end.push(data.or_fine);
 
     const query = { nome: data.nome, storico_noleggi: { $elemMatch: { office_id: { $in: arr_off }, inizio: { $in: arr_start }, fine: { $in: arr_end } } } };
-    
+
     /*campo.$ = first match*/
     const newval = {
-        $set: { 
-            "storico_noleggi.$.inizio": data.inizio ,
-            "storico_noleggi.$.fine": data.fine ,
-            "storico_noleggi.$.pagamento": data.costo 
-            }
+        $set: {
+            "storico_noleggi.$.inizio": data.inizio,
+            "storico_noleggi.$.fine": data.fine,
+            "storico_noleggi.$.pagamento": data.costo
+        }
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////77
@@ -647,12 +632,12 @@ app.put('/mongo/putnoleggi', (req, res) => {
     const query_occ = { nome: data.office, occupato: { $elemMatch: { from: { $in: arr_start }, to: { $in: arr_end } } } };
 
 
-    const new_occ={
+    const new_occ = {
         $set: {
             "occupato.$.from": data.inizio,
             "occupato.$.to": data.fine
         }
-     }    
+    }
 
 
     MongoClient.connect(localMongoUri, function (err, database) {
@@ -668,7 +653,7 @@ app.put('/mongo/putnoleggi', (req, res) => {
 
             console.log(ris);
         });
-        
+
         dbo.collection("Uffici").updateOne(query_occ, new_occ, function (err, ris) {
             if (err) {
                 throw err;
@@ -725,5 +710,5 @@ function generateAccessToken(user) {
 
 
 
-const port = process.env.PORT||8000
+const port = process.env.PORT || 8000
 app.listen(port, () => console.log(`Listening on port ${port}...`));
