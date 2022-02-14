@@ -114,7 +114,7 @@ async function modnolo(i)
 
   <div class="mb-3">
     <label for="pay" class="form-label">Costo</label>
-    <input type="number" class="form-control" min='0' value="${parseFloat(dati[4])}" id="pay" aria-describedby="payhelp" required>
+    <input type="number" step="0.01" class="form-control" min='0' value="${parseFloat(dati[4])}" id="pay" aria-describedby="payhelp" required>
     <div id="payhelp" class="form-text">Costo del noleggio</div>
   </div>
   <p>Stato: ${dati[5].substring(0, dati[5].indexOf("M")-1)}</p>
