@@ -18,13 +18,18 @@
   "homepage": "https://github.com/AndreSkin/site202109#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
+    "busboy": "^1.4.0",
+    "connect-busboy": "^1.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
     "express-flash": "0.0.2",
     "express-session": "^1.17.2",
+    "fs-extra": "^10.0.0",
     "jsonwebtoken": "^8.5.1",
     "method-override": "^3.0.0",
-    "mongoose": "^6.2.1"
+    "mongoose": "^6.2.1",
+    "multer": "^1.4.4"
   }
 }
