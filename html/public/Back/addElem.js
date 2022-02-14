@@ -50,19 +50,19 @@ async function renderaddPerson() {
 
         <div class="mb-3">
           <label for="name" class="form-label">Nome</label>
-          <input type="text" class="form-control" placeholder="Nome dell'utente" id="name" name="nome" aria-describedby="namehelp">
+          <input type="text" class="form-control" placeholder="Nome dell'utente" id="name" name="nome" aria-describedby="namehelp"></input>
           <div id="namehelp" class="form-text">Nome dell'utente</div>
         </div>
 
       <div class="mb-3">
       <label for="address" class="form-label">Indirizzo</label>
-      <input type="text" class="form-control" placeholder="Indirizzo dell'utente" id="address" name="address" aria-describedby="addresshelp">
+      <input type="text" class="form-control" placeholder="Indirizzo dell'utente" id="address" name="address" aria-describedby="addresshelp"></input>
       <div id="addresshelp" class="form-text">Indirizzo dell'utente</div>
     </div>
 
       <div class="mb-3">
       <label for="address" class="form-label">Mail</label>
-      <input type="email" class="form-control" placeholder="Mail dell'utente" id="mail" name="mail" aria-describedby="mailhelp">
+      <input type="email" class="form-control" placeholder="Mail dell'utente" id="mail" name="mail" aria-describedby="mailhelp"></input>
       <div id="mailhelp" class="form-text">Mail dell'utente</div>
     </div>
 
@@ -136,31 +136,31 @@ async function renderaddOffice() {
 
         <div class="mb-3">
           <label for="name" class="form-label">Nome</label>
-          <input type="text" class="form-control" placeholder="Nome dell'ufficio" id="name" name="nome" aria-describedby="namehelp">
+          <input type="text" class="form-control" placeholder="Nome dell'ufficio" id="name" name="nome" aria-describedby="namehelp"></input>
           <div id="namehelp" class="form-text">Nome dell'ufficio</div>
         </div>
 
       <div class="mb-3">
       <label for="address" class="form-label">Indirizzo</label>
-      <input type="text" class="form-control" placeholder="Indirizzo dell'ufficio" id="address" name="indirizzo" aria-describedby="addresshelp">
+      <input type="text" class="form-control" placeholder="Indirizzo dell'ufficio" id="address" name="indirizzo" aria-describedby="addresshelp"></input>
       <div id="addresshelp" class="form-text">Indirizzo dell'ufficio</div>
     </div>
 
     <div class="mb-3">
       <label for="mq" class="form-label">Metri quadri</label>
-      <input type="number" min="20" max="500" class="form-control" placeholder="Grandezza dell'ufficio in MQ" id="mq" name="mq" value="80" aria-describedby="mqhelp">
+      <input type="number" min="20" max="500" class="form-control" placeholder="Grandezza dell'ufficio in MQ" id="mq" name="mq" value="80" aria-describedby="mqhelp"></input>
       <div id="mqhelp" class="form-text">Metri quadri dell'ufficio</div>
     </div>
 
     <div class="mb-3">
       <label for="tier" class="form-label">Tier</label>
-      <input type="number" min="1" max="3" class="form-control" placeholder="Tier dell'ufficio" id="tier" name="tier" value="2" aria-describedby="tierhelp">
+      <input type="number" min="1" max="3" class="form-control" placeholder="Tier dell'ufficio" id="tier" name="tier" value="2" aria-describedby="tierhelp"></input>
       <div id="tierhelp" class="form-text">Tier dell'ufficio</div>
     </div>
 
     <div class="mb-3">
     <label for="stato" class="form-label">Stato</label>
-    <select class="form-select selform" aria-label="Selezione stato dell'ufficio" id="stato" name="stato" aria-describedby="statushelp">
+    <select class="form-select selform" aria-label="Selezione stato dell'ufficio" id="stato" name="stato" aria-describedby="statushelp"></input>
       <option value="pessimo">Pessimo</option>
       <option value="sufficiente">Sufficiente</option>
       <option selected value="buono">Buono</option>
@@ -171,7 +171,7 @@ async function renderaddOffice() {
 
     <div class="mb-3">
       <label for="costo" class="form-label">Costo base</label>
-      <input type="number" min="20" max="500" class="form-control" placeholder="Costo base dell'ufficio" id="costo" name="costo_base" value="120" aria-describedby="costohelp">
+      <input type="number" min="20" max="500" class="form-control" placeholder="Costo base dell'ufficio" id="costo" name="costo_base" value="120" aria-describedby="costohelp"></input>
       <div id="costohelp" class="form-text">Costo base dell'ufficio</div>
     </div>
 
