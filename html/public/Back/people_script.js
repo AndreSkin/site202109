@@ -70,21 +70,23 @@ async function showstorico(showhide)
 async function getstorico(data, i)
 {
     let p =''
-    for (noleggio of data.Clienti[i].storico_noleggi)
-    {
-        if (noleggio.office_id == '')
-        {
-            return '';
-        }
-        p +=(`<p class="card-text">Ufficio: ${noleggio.office_id}</p>
-                    <p class="card-text">Inizio: ${noleggio.inizio}</p>
-                    <p class="card-text">Fine: ${noleggio.fine}</p>
-                    <p class="card-text">Incasso: ${noleggio.pagamento} €</p>
-                    <p class="card-text">Danni: ${noleggio.danno} €</p>
-                    <p class="card-text">Metodo di pagamento: ${noleggio.metodo_pagamento}</p>
-                    <p class="card-text">Stato: ${noleggio.concluso}</p>
-                   <hr>`);
-    }
+    if (data.Clienti[i].storico_noleggi != null) {
+      for (noleggio of data.Clienti[i].storico_noleggi)
+      {
+          if (noleggio.office_id == '')
+          {
+              return '';
+          }
+          p +=(`<p class="card-text">Ufficio: ${noleggio.office_id}</p>
+                      <p class="card-text">Inizio: ${noleggio.inizio}</p>
+                      <p class="card-text">Fine: ${noleggio.fine}</p>
+                      <p class="card-text">Incasso: ${noleggio.pagamento} €</p>
+                      <p class="card-text">Danni: ${noleggio.danno} €</p>
+                      <p class="card-text">Metodo di pagamento: ${noleggio.metodo_pagamento}</p>
+                      <p class="card-text">Stato: ${noleggio.concluso}</p>
+                     <hr>`);
+      }
+  }
     return p;
 }
 
