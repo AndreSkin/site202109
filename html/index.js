@@ -1,11 +1,31 @@
 global.rootDir = __dirname;
 const express = require('express');
 const app = express();
-var cors = require('cors');
 
+var busboy = require('connect-busboy'); //middleware for form/file upload
+var fs = require('fs-extra');       //File System - for file manipulation
+
+var cors = require('cors');
+app.use(busboy());
+
+const bcrypt = require('bcryptjs')
 
 var MongoClient = require('mongodb').MongoClient;
 const { get } = require('mongoose');
+
+const multer  = require('multer')
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, `${__dirname}/public/img/`)
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Math.floor(Date.now() / 1000)
+    cb(null, uniqueSuffix + '-'+ file.originalname)
+  }
+})
+
+const upload = multer({ storage: storage })
 
 const mongoCredentials =
 {
@@ -17,14 +37,6 @@ const mongoCredentials =
 const localMongoUri = "mongodb://site202109:ahmieC6r@mongo_site202109?writeConcern=majority";
 //const localMongoUri = "mongodb://localhost:27017/localtest`"
 
-////////////////////////////////////////////////////
-//const express = require('express')
-//const app = express()
-//const passport = require('passport')
-//const flash = require('express-flash')
-//const session = require('express-session')
-//const methodOverride = require('method-override')
-////////////////////////////////////////////////
 
 app.use(express.json());
 app.use(cors());
@@ -44,6 +56,12 @@ app.get('/', (req, res) => {
     )
 });
 
+app.get('/up', (req, res) => {
+    res.sendFile(
+        global.rootDir + '/up.html'
+    )
+});
+
 app.get('/management', (req, res) => {
     res.sendFile(
         global.rootDir + '/public/Dashboard/index.html'
@@ -56,9 +74,9 @@ app.get('/backoffice', (req, res) => {
     )
 });
 
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-const fs = require('fs')
 
 /*Per ragioni di debug si possono prendere i dati anche da file json*/
 async function getpeople() {
@@ -148,6 +166,24 @@ app.get('/mongo/droppeople', async (req, res) => {
     });
     console.log("\n ////////////////////// \n")
     res.status(200).json("Reset dei dati persone avvenuto correttamente");
+})
+
+app.get('/mongo/dropclients', async (req, res) => {
+
+    MongoClient.connect(localMongoUri, async function (err, database) {
+        if (err) throw err;
+        console.log("DB OK - RESET DATA");
+        var dbo = database.db("SiteDB");
+
+
+            dbo.collection("Clienti").deleteMany({}, function (err, result) {
+                if (err) throw err;
+                console.log(result);
+            });
+
+    });
+    console.log("\n ////////////////////// \n")
+    res.status(200).json("Reset dei clienti avvenuto correttamente");
 })
 
 /*Endpoint per eliminare tutti i dati uffici*/
@@ -310,17 +346,39 @@ app.get('/feste', async (req, res) => {
 
 ///////////////////////////////////////////////////////////////////////////////////
 //MONGO CRUD
+async function defaultpwd() {
+    return new Promise (async (resolve, reject) => {
+        let ans = '';
+        let pwd = '';
+        ans = await bcrypt.hash("default", 10, async (err, password) => {
+            if (err) {
+                throw err;
+            }
+            pwd = password;
+            resolve(password);
+        });
+    });
+}
+
 
 /*POST: per l'inserimento di nuovi dati nel DB*/
-app.post('/mongo/posthere', (req, res) => {
+app.post('/mongo/posthere', upload.single('image'), async (req, res) => {
     if ((!req.body) || (req.query.type == undefined)) {
         //400 Bad Request
         res.status(400).send("input sbagliato")
         return;
     }
+
     let data = req.body;
+    let filename = req.file!=undefined?req.file.filename:null;
+
     let obj = {};
+    // La collection che sarà modificataa
     let coll = '';
+
+    // Hash della password di default (per inserimento utenti tramite back office)
+    let def =''
+    await defaultpwd().then(resp=>def=resp)
 
     switch (req.query.type) {
         /*Inserimento di un ufficio*/
@@ -328,12 +386,12 @@ app.post('/mongo/posthere', (req, res) => {
             obj = {
                 nome: data.nome,
                 indirizzo: data.indirizzo,
-                occupato: data.occupato,
+                occupato: [],
                 mq: parseFloat(data.mq),
                 tier: parseFloat(data.tier),
                 stato: data.stato,
                 costo_base: parseFloat(data.costo_base),
-                img: data.img,
+                img: `../img/${filename}`,
                 descrizione: data.descrizione,
                 annotazione: data.annotazione == ""?"Nessuna annotazione":data.annotazione,
                 insertion: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)
@@ -342,15 +400,20 @@ app.post('/mongo/posthere', (req, res) => {
             break;
         /*Inserimento di un utente*/
         case "user":
+          if (filename == null)
+          {
+              filename = "avatar.jpg"
+          }
+
             obj = {
                 nome: data.nome,
-                indirizzo: data.indirizzo,
+                indirizzo: data.address,
                 mail: data.mail,
-                psw: data.psw,
-                tier_cliente: parseFloat(data.tier),
-                img: data.img,
-                annotazioni: data.annotazioni,
-                storico_noleggi: data.storico
+                psw: data.psw == null ? def : data.psw,
+                tier_cliente: 0,
+                img: `../img/${filename}`,
+                annotazioni: "Nessuna annotazione",
+                storico_noleggi: []
             };
             coll = "Clienti";
             break;
@@ -360,7 +423,8 @@ app.post('/mongo/posthere', (req, res) => {
                 nome: data.nome,
                 indirizzo: data.indirizzo,
                 mail: data.mail,
-                psw: data.psw
+                img: `../img/funz.jpg`,
+                psw: data.psw == null ? def : data.psw
             };
             coll = "Dipendenti";
             break;
@@ -370,7 +434,8 @@ app.post('/mongo/posthere', (req, res) => {
                 nome: data.nome,
                 indirizzo: data.indirizzo,
                 mail: data.mail,
-                psw: data.psw
+                img: `../img/manager.jpg`,
+                psw: data.psw == null ? def : data.psw
             };
             coll = "Manager";
             break;
@@ -568,6 +633,10 @@ app.put('/mongo/putpending', (req, res) => {
     let start = data.pending.inizio;
     let end = data.pending.fine;
 
+    let office_query = { nome: office };
+    let office_values = {};
+
+
     /*Nuovo noleggio*/
     if (req.query.type == "ins") {
         ins = true;
@@ -578,9 +647,8 @@ app.put('/mongo/putpending', (req, res) => {
             }
         }
 
-        let office_query = { nome: office };
         /*Nuove date*/
-        let office_values = {
+        office_values = {
             $push: {
                 occupato: { "from": start, "to": end }
             }
