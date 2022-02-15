@@ -25,7 +25,7 @@ async function renderAnagrafica()
                             <h4 class="card-title dato">${user.nome}; </h4>
                             <p class="card-text dato">Indirizzo: ${user.indirizzo}; </p>
                             <p class="card-text dato">Mail: ${user.mail}; </p>
-                            <p class="card-text dato">Annotazioni: ${user.annotazioni}; </p>
+                            <p class="card-text dato">Annotazioni: ${user.annotazioni == ""?"Nessuna annotazione":user.annotazioni}; </p>
                             <p class="card-text dato">Tier cliente: ${user.tier_cliente}; </p>
                             </div>
                             <div class="storico_text"
