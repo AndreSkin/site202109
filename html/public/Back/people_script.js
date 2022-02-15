@@ -14,7 +14,7 @@ async function renderAnagrafica()
                     <div class="card mb-3" style="max-width: 600px;">
                       <div class="row g-0">
                         <div class="col-md-4 card_cont">
-                          <img src="${user.img}" class="img-fluid rounded-start" alt="Immagine dell'utente ${user.nome}">
+                          <img src="${user.img}" class="img-fluid rounded-start imgppl" alt="Immagine dell'utente ${user.nome}">
                             <div class=container>
                                 <button type="button" class="btn-primary btn-modifica" onclick="modifica_carta(${i})">Modifica o elimina ${`<br> ${user.nome}`} </button>
                             </div>
