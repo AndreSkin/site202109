@@ -85,7 +85,7 @@ async function getstorico(data, i)
                       <p class="card-text">Fine: ${noleggio.fine}</p>
                       <p class="card-text">Incasso: ${noleggio.pagamento} €</p>
                       <p class="card-text">Danni: ${noleggio.danno} €</p>
-                      <p class="card-text">Metodo di pagamento: ${noleggio.metodo_pagamento}</p>
+                      <p class="card-text">Metodo di pagamento: ${noleggio.payment}</p>
                       <p class="card-text">Stato: ${noleggio.concluso}</p>
                      <hr>`);
       }
