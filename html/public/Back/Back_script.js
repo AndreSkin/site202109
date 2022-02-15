@@ -1,16 +1,15 @@
 var serverUrl = "https://site202109.tw.cs.unibo.it/";
 //var serverUrl = "https://localhost:8000/";
 
-var funzionario = JSON.parse(sessionStorage.getItem('user')).nome;
-
 $(document).ready(function(){
   setactive_side("home");
 
-  let auth = sessionStorage.getItem('permesso');
-  if ((parseInt(auth) < 2) || (sessionStorage.length < 1))
+  let auth = localStorage.getItem('permesso');
+  if ((parseInt(auth) < 2) || (localStorage.length < 1))
   {
-    window.location.href = serverUrl
+    window.location.href = serverUrl;
   }
+
 })
 
 
@@ -54,6 +53,6 @@ async function setactive_side(id)
 async function renderHome()
 {
     $("#textdiv").empty();
-    $("#textdiv").append(`<div><h1>Benvenuto nel Back Office di NoloNolo+ ${funzionario}</div>`);
+    $("#textdiv").append(`<div><h1>Benvenuto nel Back Office di NoloNolo+ ${JSON.parse(localStorage.getItem('user')).nome}</div>`);
     $("#textdiv").attr("aria-label", "Contenuto principale: messaggio di saluto");
 }
