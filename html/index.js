@@ -56,6 +56,11 @@ app.get('/', (req, res) => {
     )
 });
 
+app.get('/up', (req, res) => {
+    res.sendFile(
+        global.rootDir + '/up.html'
+    )
+});
 
 app.get('/management', (req, res) => {
     res.sendFile(
