@@ -415,7 +415,7 @@ app.post('/mongo/posthere', upload.single('image'), async (req, res) => {
         case "dipendente":
             obj = {
                 nome: data.nome,
-                indirizzo: data.indirizzo,
+                indirizzo: data.address,
                 mail: data.mail,
                 img: `../img/funz.jpg`,
                 psw: data.psw == null ? def : data.psw
@@ -426,7 +426,7 @@ app.post('/mongo/posthere', upload.single('image'), async (req, res) => {
         case "manager":
             obj = {
                 nome: data.nome,
-                indirizzo: data.indirizzo,
+                indirizzo: data.address,
                 mail: data.mail,
                 img: `../img/manager.jpg`,
                 psw: data.psw == null ? def : data.psw
