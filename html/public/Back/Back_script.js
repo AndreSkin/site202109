@@ -7,7 +7,7 @@ $(document).ready(function(){
   setactive_side("home");
 
   let auth = sessionStorage.getItem('permesso');
-  if (parseInt(auth) < 2)
+  if (parseInt(auth) < 2 || sessionStorage.length < 1)
   {
     window.location.href = serverUrl
   }
