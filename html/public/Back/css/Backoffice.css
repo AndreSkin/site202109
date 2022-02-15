@@ -34,8 +34,18 @@ hr {
 {
   width: auto;
   height: auto;
+  max-width: 300px;
+  max-height: 300px;
+  overflow: hidden;
 }
 
+.imgppl{
+  width: auto;
+  height: auto;
+  max-width: 200px;
+  max-height: 200px;
+  overflow: hidden;
+}
 
 .btn-modifica {
     margin-top: 20px;

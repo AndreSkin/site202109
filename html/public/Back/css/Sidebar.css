@@ -9,7 +9,7 @@
     font-weight: bold;
     text-align: left;
     margin-left:3px;
-    font-size:20px;
+    font-size:1.3vw;
 }
 
 .nav-item a:hover {
@@ -51,7 +51,7 @@
 }
 
 
-@media screen and (max-width: 770px) {
+@media screen and (max-width: 767px) {
 
     .menu {
         margin: auto;
@@ -95,6 +95,10 @@
     .card_cont{
       text-align: center;
     }
+
+    #sidehr{
+      display:none;
+    }
 }
 
 @media screen and (max-width: 400px) {
@@ -109,5 +113,8 @@
 
     .card_cont{
       text-align: center;
+    }
+    #sidehr{
+      display:none;
     }
 }

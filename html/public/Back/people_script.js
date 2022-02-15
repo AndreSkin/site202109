@@ -2,6 +2,7 @@
 async function renderAnagrafica()
 {
     $("#textdiv").empty();
+    $("#textdiv").attr("aria-label", "Contenuto principale: Elenco di tutti i clienti");
     let i = 0;
     await $.ajax({
         type: 'GET',
@@ -13,7 +14,7 @@ async function renderAnagrafica()
                     <div class="card mb-3" style="max-width: 600px;">
                       <div class="row g-0">
                         <div class="col-md-4 card_cont">
-                          <img src="${user.img}" class="img-fluid rounded-start" alt="Immagine dell'utente ${user.nome}">
+                          <img src="${user.img}" class="img-fluid rounded-start imgppl" alt="Immagine dell'utente ${user.nome}">
                             <div class=container>
                                 <button type="button" class="btn-primary btn-modifica" onclick="modifica_carta(${i})">Modifica o elimina ${`<br> ${user.nome}`} </button>
                             </div>
@@ -24,7 +25,7 @@ async function renderAnagrafica()
                             <h4 class="card-title dato">${user.nome}; </h4>
                             <p class="card-text dato">Indirizzo: ${user.indirizzo}; </p>
                             <p class="card-text dato">Mail: ${user.mail}; </p>
-                            <p class="card-text dato">Annotazioni: ${user.annotazioni}; </p>
+                            <p class="card-text dato">Annotazioni: ${user.annotazioni == ""?"Nessuna annotazione":user.annotazioni}; </p>
                             <p class="card-text dato">Tier cliente: ${user.tier_cliente}; </p>
                             </div>
                             <div class="storico_text"
@@ -40,7 +41,7 @@ async function renderAnagrafica()
             }
             $("#textdiv").prepend(`
               <div class="butdiv">
-              <button type"button" class="btn-success btn-showstorico" onclick="showstorico(false)">Visualizza gli storico noleggi</button>
+              <button type"button" class="btn-success btn-showstorico" onclick="showstorico(false)" aria-label="Visualizza lo storico noleggi dei clienti">Visualizza storico noleggi</button>
               </div>`);
 
              $(".storico_text").hide();
@@ -55,14 +56,16 @@ async function showstorico(showhide)
   if (showhide)
   {
     $(".storico_text").hide();
-    $(".btn-showstorico").text("Visualizza gli storico noleggi");
+    $(".btn-showstorico").text("Visualizza storico noleggi");
     $(".btn-showstorico")[0].onclick = function() {showstorico(false)};
+    $(".btn-showoccupato").prop("aria-label", "Visualizza Lo storico noleggi dei clienti");
   }
   else
   {
     $(".storico_text").show();
-    $(".btn-showstorico").text("Nascondi gli storico noleggi");
+    $(".btn-showstorico").text("Nascondi storico noleggi");
     $(".btn-showstorico")[0].onclick = function() {showstorico(true)};
+    $(".btn-showoccupato").prop("aria-label", "Nascondi lo storico noleggi dei clienti");
   }
 }
 
@@ -82,7 +85,7 @@ async function getstorico(data, i)
                       <p class="card-text">Fine: ${noleggio.fine}</p>
                       <p class="card-text">Incasso: ${noleggio.pagamento} €</p>
                       <p class="card-text">Danni: ${noleggio.danno} €</p>
-                      <p class="card-text">Metodo di pagamento: ${noleggio.metodo_pagamento}</p>
+                      <p class="card-text">Metodo di pagamento: ${noleggio.payment}</p>
                       <p class="card-text">Stato: ${noleggio.concluso}</p>
                      <hr>`);
       }
@@ -107,7 +110,7 @@ async function modifica_carta(i)
 
     $(`#pers_data${i}`).hide();
     $(`#carta${i}`).prepend(`
-        <form>
+        <form arial-label="Form di modifica dell'utente">
           <div class="mb-3">
             <label for="name" class="form-label">Nome</label>
             <input type="text" class="form-control" value="${dati[0]}" id="name" aria-describedby="namehelp">

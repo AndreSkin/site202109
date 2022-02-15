@@ -38,8 +38,9 @@
 </head>
 
 <body>
-    <div class="row container-fluid">
-        <div class="col-md-auto">
+    <div class="row container-fluid" >
+        <div class="col-md-auto" role="region" aria-label="Sidebar del backoffice">
+          <nav>
             <ul class="nav flex-column menu">
                 <li class="nav-item">
                     <a class="nav-link title" href="#" onclick=setactive_side("home")><img class="logo" src="../img/NoloNolo+.png" alt="Logo di NoloNolo+"></a>
@@ -59,12 +60,22 @@
                 <li class="nav-item">
                     <a id="noleggi" class="nav-link" href="#" onclick=setactive_side("noleggi")>Noleggi</a>
                 </li>
+                <hr id="sidehr">
+                <li class="nav-item">
+                    <a id="front" class="nav-link" href="http://site202109.tw.cs.unibo.it/">Front office</a>
+                </li>
+                <li class="nav-item">
+                    <a id="manager" class="nav-link" href="http://site202109.tw.cs.unibo.it/management">Area Manager</a>
+                </li>
             </ul>
+          </nav>
         </div>
 
-        <div class="col" id="textdiv">
+        <div class="col" id="textdiv" role="region" aria-label="Contenuto principale della pagina">
+          <main>
             <h1>Qualcosa è andato storto</h1>
-        </div>
+      </main>
+    </div>
 
     </div>
 

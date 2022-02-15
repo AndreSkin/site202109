@@ -45,4 +45,5 @@ async function renderHome()
 {
     $("#textdiv").empty();
     $("#textdiv").append(`<div><h1>Benvenuti nel Back Office di NoloNolo+</div>`);
+    $("#textdiv").attr("aria-label", "Contenuto principale: messaggio di saluto");
 }

@@ -1,6 +1,8 @@
 var buttongroup =`
-<button type="button" class="btn-success" onclick="shownolo()">Visualizza i noleggi in corso o futuri</button>
-<button type="button" class="btn-success" onclick="showstory()">Visualizza lo storico noleggi</button>`
+<div class="butdiv">
+  <button type="button" class="btn-success" onclick="shownolo()">Visualizza i noleggi in corso o futuri</button>
+  <button type="button" class="btn-success" onclick="showstory()">Visualizza lo storico noleggi</button>
+<div>`
 
 async function renderNoleggi()
 {

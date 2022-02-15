@@ -6,12 +6,14 @@ async function renderAddelem() {
         <button type="button" class="btn btn-success disp-btn" onclick="renderaddPerson()">Aggiungi un utente</button>
         <button type="button" class="btn btn-success disp-btn" onclick="renderaddOffice()">Aggiungi un ufficio</button>
       `)
+      $("#textdiv").attr("aria-label", "Contenuto principale: Scelta dell'elemento da aggiungere");
 }
 
 async function renderaddPerson() {
   let url = serverUrl + 'mongo/posthere'
   let type = 'user';
     $("#textdiv").empty();
+    $("#textdiv").attr("aria-label", "Contenuto principale: form per aggiungere un nuovo utente");
     $("#textdiv").append(`
     <h3>Aggiungi un utente</h3>
 
@@ -44,7 +46,7 @@ async function renderaddPerson() {
 
     <div class="mb-3">
       <label for="image" class="form-label">Immagine profilo</label>
-        <input type='file' class="imgup" id="image" name="image" aria-describedby="imghelp"></input>
+        <input type='file' class="imgup" id="image" name="image" accept="image/*" aria-describedby="imghelp"></input>
         <div id="imghelp" class="form-text">Immagine profilo dell'utente</div>
       </div>
 
@@ -61,7 +63,7 @@ async function renderaddPerson() {
     </div>
 
       <div class="mb-3">
-      <label for="address" class="form-label">Mail</label>
+      <label for="mail" class="form-label">Mail</label>
       <input type="email" class="form-control" placeholder="Mail dell'utente" id="mail" name="mail" aria-describedby="mailhelp"></input>
       <div id="mailhelp" class="form-text">Mail dell'utente</div>
     </div>
@@ -95,7 +97,6 @@ async function renderaddPerson() {
 
         let form = $('#tosub')[0];
 
-        // Create an FormData object
         let data = new FormData(form);
 
         $.ajax({
@@ -123,6 +124,7 @@ async function renderaddPerson() {
 async function renderaddOffice() {
   let url = serverUrl + 'mongo/posthere'
     $("#textdiv").empty();
+    $("#textdiv").attr("aria-label", "Contenuto principale: form per inserire un nuovo ufficio");
     $("#textdiv").append(`
     <h3>Aggiungi un ufficio</h3>
 
@@ -130,7 +132,7 @@ async function renderaddOffice() {
 
     <div class="mb-3">
       <label for="image" class="form-label">Immagine dell'ufficio</label>
-        <input type='file' class="imgup" id="image" name="image" aria-describedby="imghelp" required></input>
+        <input type='file' class="imgup" id="image" name="image" accept="image/*" aria-describedby="imghelp" required></input>
         <div id="imghelp" class="form-text">Immagine dell'ufficio</div>
       </div>
 
@@ -187,7 +189,7 @@ async function renderaddOffice() {
       <div id="annhelp" class="form-text">Annotazioni riguardo l'ufficio</div>
     </div>
 
-        <button type="submit" class="btn btn-primary" onclick="addoffice()">Aggiungi</button>
+        <button type="submit" class="btn btn-primary">Aggiungi</button>
         <button type="button" class="btn btn-warning" onclick="renderAddelem()">Annulla</button>
     </form>
   `);
@@ -199,7 +201,6 @@ async function renderaddOffice() {
 
         let form = $('#tosub_off')[0];
 
-        // Create an FormData object
         let data = new FormData(form);
 
         $.ajax({
