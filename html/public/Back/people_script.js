@@ -2,6 +2,7 @@
 async function renderAnagrafica()
 {
     $("#textdiv").empty();
+    $("#textdiv").attr("aria-label", "Contenuto principale: Elenco di tutti i clienti");
     let i = 0;
     await $.ajax({
         type: 'GET',
@@ -40,7 +41,7 @@ async function renderAnagrafica()
             }
             $("#textdiv").prepend(`
               <div class="butdiv">
-              <button type"button" class="btn-success btn-showstorico" onclick="showstorico(false)">Visualizza gli storico noleggi</button>
+              <button type"button" class="btn-success btn-showstorico" onclick="showstorico(false)" aria-label="Visualizza lo storico noleggi dei clienti">Visualizza storico noleggi</button>
               </div>`);
 
              $(".storico_text").hide();
@@ -55,14 +56,16 @@ async function showstorico(showhide)
   if (showhide)
   {
     $(".storico_text").hide();
-    $(".btn-showstorico").text("Visualizza gli storico noleggi");
+    $(".btn-showstorico").text("Visualizza storico noleggi");
     $(".btn-showstorico")[0].onclick = function() {showstorico(false)};
+    $(".btn-showoccupato").prop("aria-label", "Visualizza Lo storico noleggi dei clienti");
   }
   else
   {
     $(".storico_text").show();
-    $(".btn-showstorico").text("Nascondi gli storico noleggi");
+    $(".btn-showstorico").text("Nascondi storico noleggi");
     $(".btn-showstorico")[0].onclick = function() {showstorico(true)};
+    $(".btn-showoccupato").prop("aria-label", "Nascondi lo storico noleggi dei clienti");
   }
 }
 
@@ -107,7 +110,7 @@ async function modifica_carta(i)
 
     $(`#pers_data${i}`).hide();
     $(`#carta${i}`).prepend(`
-        <form>
+        <form arial-label="Form di modifica dell'utente">
           <div class="mb-3">
             <label for="name" class="form-label">Nome</label>
             <input type="text" class="form-control" value="${dati[0]}" id="name" aria-describedby="namehelp">

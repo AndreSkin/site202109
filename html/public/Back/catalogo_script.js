@@ -5,6 +5,7 @@ async function renderCatalogo()
   var calendar_change = false;
 
     $("#textdiv").empty();
+    $("#textdiv").attr("aria-label", "Contenuto principale: Elenco degli uffici");
     let k=0;
     await $.ajax({
         type: 'GET',
@@ -48,7 +49,7 @@ async function renderCatalogo()
             }
             $("#textdiv").prepend(`
               <div class="butdiv">
-              <button type"button" class="btn-success btn-showoccupato" onclick="showoccupato(false)">Visualizza le disponibilità</button>
+              <button type"button" class="btn-success btn-showoccupato" onclick="showoccupato(false)" aria-label="Visualizza le date in cui gli uffici non sono disponibili">Visualizza le disponibilità</button>
               </div>`);
             $(".occupato_text").hide();
 
@@ -74,12 +75,14 @@ async function showoccupato(showhide)
     $(".occupato_text").hide();
     $(".btn-showoccupato").text("Visualizza le disponibilità");
     $(".btn-showoccupato")[0].onclick = function() {showoccupato(false)};
+    $(".btn-showoccupato").prop("aria-label", "Visualizza le date in cui gli uffici non sono disponibili");
   }
   else
   {
     $(".occupato_text").show();
     $(".btn-showoccupato").text("Nascondi le disponibilità");
     $(".btn-showoccupato")[0].onclick = function() {showoccupato(true)};
+    $(".btn-showoccupato").prop("aria-label", "Nascondi le date in cui gli uffici non sono disponibili");
   }
 }
 
@@ -100,7 +103,7 @@ async function modifica_catalogo(k)
 
   $(`#cat_data${k}`).hide();
   $(`#cat${k}`).prepend(`
-    <form>
+    <form aria-label="Form di modifica dell'ufficio">
       <div class="mb-3">
         <label for="name" class="form-label">Nome</label>
         <input type="text" class="form-control" value="${dati[0]}" id="name" aria-describedby="namehelp">
@@ -155,7 +158,7 @@ async function modifica_catalogo(k)
       </div>
 
       <div class="disponibilita">
-        <button type="button" class="btn btn-success disp-btn" onclick="disp(${k})">Modifica disponibilità</button>
+        <button type="button" class="btn btn-success disp-btn" onclick="disp(${k})" aria-label="Modifica le date di disponibilità">Modifica disponibilità</button>
       </div>
 
       <button type="submit" class="btn btn-primary" onclick="change_cat('${dati[0]}')">Conferma modifiche</button>

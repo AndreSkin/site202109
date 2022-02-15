@@ -6,12 +6,14 @@ async function renderAddelem() {
         <button type="button" class="btn btn-success disp-btn" onclick="renderaddPerson()">Aggiungi un utente</button>
         <button type="button" class="btn btn-success disp-btn" onclick="renderaddOffice()">Aggiungi un ufficio</button>
       `)
+      $("#textdiv").attr("aria-label", "Contenuto principale: Scelta dell'elemento da aggiungere");
 }
 
 async function renderaddPerson() {
   let url = serverUrl + 'mongo/posthere'
   let type = 'user';
     $("#textdiv").empty();
+    $("#textdiv").attr("aria-label", "Contenuto principale: form per aggiungere un nuovo utente");
     $("#textdiv").append(`
     <h3>Aggiungi un utente</h3>
 
@@ -61,7 +63,7 @@ async function renderaddPerson() {
     </div>
 
       <div class="mb-3">
-      <label for="address" class="form-label">Mail</label>
+      <label for="mail" class="form-label">Mail</label>
       <input type="email" class="form-control" placeholder="Mail dell'utente" id="mail" name="mail" aria-describedby="mailhelp"></input>
       <div id="mailhelp" class="form-text">Mail dell'utente</div>
     </div>
@@ -123,6 +125,7 @@ async function renderaddPerson() {
 async function renderaddOffice() {
   let url = serverUrl + 'mongo/posthere'
     $("#textdiv").empty();
+    $("#textdiv").attr("aria-label", "Contenuto principale: form per inserire un nuovo ufficio");
     $("#textdiv").append(`
     <h3>Aggiungi un ufficio</h3>
 
@@ -187,7 +190,7 @@ async function renderaddOffice() {
       <div id="annhelp" class="form-text">Annotazioni riguardo l'ufficio</div>
     </div>
 
-        <button type="submit" class="btn btn-primary" onclick="addoffice()">Aggiungi</button>
+        <button type="submit" class="btn btn-primary">Aggiungi</button>
         <button type="button" class="btn btn-warning" onclick="renderAddelem()">Annulla</button>
     </form>
   `);
@@ -199,7 +202,6 @@ async function renderaddOffice() {
 
         let form = $('#tosub_off')[0];
 
-        // Create an FormData object
         let data = new FormData(form);
 
         $.ajax({
