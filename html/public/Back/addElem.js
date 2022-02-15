@@ -46,7 +46,7 @@ async function renderaddPerson() {
 
     <div class="mb-3">
       <label for="image" class="form-label">Immagine profilo</label>
-        <input type='file' class="imgup" id="image" name="image" aria-describedby="imghelp"></input>
+        <input type='file' class="imgup" id="image" name="image" accept="image/*" aria-describedby="imghelp"></input>
         <div id="imghelp" class="form-text">Immagine profilo dell'utente</div>
       </div>
 
@@ -97,7 +97,6 @@ async function renderaddPerson() {
 
         let form = $('#tosub')[0];
 
-        // Create an FormData object
         let data = new FormData(form);
 
         $.ajax({
@@ -133,7 +132,7 @@ async function renderaddOffice() {
 
     <div class="mb-3">
       <label for="image" class="form-label">Immagine dell'ufficio</label>
-        <input type='file' class="imgup" id="image" name="image" aria-describedby="imghelp" required></input>
+        <input type='file' class="imgup" id="image" name="image" accept="image/*" aria-describedby="imghelp" required></input>
         <div id="imghelp" class="form-text">Immagine dell'ufficio</div>
       </div>
 
