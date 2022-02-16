@@ -776,17 +776,30 @@ app.put('/mongo/putnoleggi', (req, res) => {
     arr_end.push(data.or_fine);
 
     const query = { nome: data.nome, storico_noleggi: { $elemMatch: { office_id: { $in: arr_off }, inizio: { $in: arr_start }, fine: { $in: arr_end } } } };
-
+    let newval = {};
     /*campo.$ = first match*/
-    const newval = {
-        $set: {
-            "storico_noleggi.$.inizio": data.inizio,
-            "storico_noleggi.$.fine": data.fine,
-            "storico_noleggi.$.pagamento": data.costo,
-            "storico_noleggi.$.payment": data.payment,
-            "storico_noleggi.$.fattura": data.fattura
-        }
-    };
+    if (req.query.type == "front")
+    {
+       newval = {
+            $set: {
+                "storico_noleggi.$.inizio": data.inizio,
+                "storico_noleggi.$.fine": data.fine,
+                "storico_noleggi.$.pagamento": data.costo,
+                "storico_noleggi.$.payment": data.payment,
+                "storico_noleggi.$.fattura": data.fattura
+            }
+        };
+      }
+      else
+      {
+        newval = {
+             $set: {
+                 "storico_noleggi.$.inizio": data.inizio,
+                 "storico_noleggi.$.fine": data.fine,
+                 "storico_noleggi.$.pagamento": data.costo
+             }
+         };
+      }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////77
 
@@ -800,29 +813,53 @@ app.put('/mongo/putnoleggi', (req, res) => {
         }
     }
 
+    const confirm={
+      $set: {
+          "storico_noleggi.$.funzionario": data.funzionario,
+          "storico_noleggi.$.concluso":"Concluso",
+          "storico_noleggi.$.danno": data.danno
+      }
+    }
 
     MongoClient.connect(localMongoUri, function (err, database) {
         if (err) throw err;
         console.log("DB connected!");
         var dbo = database.db("SiteDB");
 
-        dbo.collection("Clienti").updateOne(query, newval, function (err, ris) {
-            if (err) {
+        if (req.query.type != "confirm")
+        {
+          dbo.collection("Clienti").updateOne(query, newval, function (err, ris) {
+              if (err)
+              {
+                  throw err;
+                  return;
+              }
+
+              console.log(ris);
+          });
+
+          dbo.collection("Uffici").updateOne(query_occ, new_occ, function (err, ris) {
+              if (err)
+              {
+                  throw err;
+                  return;
+              }
+
+              console.log(ris);
+          });
+      }
+      else
+      {
+        dbo.collection("Clienti").updateOne(query, confirm, function (err, ris) {
+            if (err)
+            {
                 throw err;
                 return;
             }
 
             console.log(ris);
         });
-
-        dbo.collection("Uffici").updateOne(query_occ, new_occ, function (err, ris) {
-            if (err) {
-                throw err;
-                return;
-            }
-
-            console.log(ris);
-        });
+      }
 
     });
     res.status(200).json("Noleggio modificato");

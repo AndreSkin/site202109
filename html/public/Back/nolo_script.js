@@ -49,7 +49,7 @@ async function shownolo()
                 {
                   p+=(`
                     <button type="button" class="btn-primary btn-mod" onclick="modnolo(${i})">Modifica</button>
-                    <button type="button" class="btn-danger btn-mod" onclick="delnolo(${i})">Elimina</button>
+                    <button type="button" class="btn-danger btn-del" onclick="delnolo(${i})">Elimina</button>
                     <hr>
                     </div>
                     </div>
@@ -58,7 +58,8 @@ async function shownolo()
                 else if (storico.concluso == "Da confermare")
                 {
                   p+=(`
-                    <button type="button" class="btn-success btn-mod" onclick="confirmnolo(${i})">Conferma restituzione</button>
+                    <button type="button" class="btn-success btn-conf" onclick="confirmnolo(${i})">Conferma restituzione</button>
+                    <span class="damage"></span>
                     <hr>
                     </div>
                     </div>
@@ -90,8 +91,59 @@ async function shownolo()
 
 async function confirmnolo(i)
 {
-  console.log("OK");
+  $("button").prop("disabled", true);
+  $("button").prop("aria-disabled", true);
+
+  $(`.noleggio${i} .damage`).append(`
+    <form>
+      <div class="mb-3">
+        <label for="danni" class="form-label">Danni</label>
+        <input type="number" class="form-control" min='0' value='0' id="danni" aria-describedby="damagehelp" required>
+        <div id="damagehelp" class="form-text">Danni imputabili al cliente</div>
+      </div>
+      <button type="button" class="btn-success btn-mod" onclick="confirm(${i})">Conferma</button>
+      <button type="button" class="btn-warning btn-del" onclick="annullaform(${i})">Annula</button>
+    </form>
+    `);
 }
+
+async function confirm(i)
+{
+  let data = $(`.noleggio${i}`).text().split('; ');
+
+  let dati =[];
+
+  for (let j = 0; j < data.length; j++)
+  {
+    dati.push(data[j].split(': ')[1]!= undefined ? data[j].split(': ')[1].trim():data[j].split(': ')[0].trim());
+  };
+
+    let confirmdata={
+      "office": dati[0],
+      "nome": dati[1],
+      "or_inizio": dati[2],
+      "or_fine": dati[3],
+      "danno": $('#danni').val(),
+      "funzionario":JSON.parse(localStorage.getItem('user')).nome
+    }
+
+    await $.ajax({
+        url: serverUrl + `mongo/putnoleggi?type=confirm`,
+        type: 'PUT',
+        data: JSON.stringify(confirmdata),
+        crossDomain: true,
+        contentType: 'application/json',
+        success: async function (data) {
+          await shownolo();
+          $("#textdiv").prepend(`<div class="success_upd">${data}</div>`);
+          setTimeout(function(){$(".success_upd").remove()}, 10000);
+        },
+        error: function(data) {
+          $("#textdiv").prepend(`<div class="fail_upd">${data}</div>`);
+          setTimeout(function(){$(".fail_upd").remove()}, 10000);
+         }
+       });
+  }
 
 async function delnolo(i)
 {
@@ -111,7 +163,6 @@ async function delnolo(i)
     "fine": dati[3]
   }
 
-  console.log(deldata);
 
   await $.ajax({
       url: serverUrl + `mongo/deletenoleggi`,
@@ -203,8 +254,8 @@ async function annullaform(i)
     $("form").remove();
     $(`.noleggio${i}`).show();
 
-    $(".btn-mod").attr("disabled", false);
-    $(".btn-mod").attr("aria-disabled", false);
+    $("button").attr("disabled", false);
+    $("button").attr("aria-disabled", false);
 }
 
 async function putnolo(i)

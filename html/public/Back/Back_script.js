@@ -6,7 +6,7 @@ $(document).ready(function(){
 
 
   let auth = localStorage.getItem('permesso');
-  if ((parseInt(auth) < 2) )//|| (localStorage.length < 1))
+  if ((parseInt(auth) < 2)  || (localStorage.length < 1))
   {
     window.location.href = serverUrl;
   }
