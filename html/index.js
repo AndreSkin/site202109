@@ -41,6 +41,7 @@ const localMongoUri = "mongodb://site202109:ahmieC6r@mongo_site202109?writeConce
 app.use(express.json());
 app.use(cors());
 
+
 app.use(express.static(global.rootDir + 'public'));
 app.use(express.static(global.rootDir + 'public/img'));
 
@@ -246,12 +247,85 @@ async function offices() {
     });
 }
 
+async function datecheck() {
+  return new Promise(async (resolve, reject) => {
+      let data;
+      await people().then(resp=> data=resp);
+
+      let in_corso = [];
+      let concluso = [];
+      for(cliente of data.Clienti)
+      {
+        for (storico of cliente.storico_noleggi)
+        {
+          if ((new Date(storico.inizio)<=new Date()) && (storico.concluso != "In corso") && (new Date(storico.fine)>=new Date()))
+          {
+            in_corso.push(
+              {
+                "nome_cliente":cliente.nome,
+                "inizio":storico.inizio,
+                "fine":storico.fine,
+                "ufficio":storico.office_id
+              }
+            );
+          }
+          else if ((new Date(storico.fine)<new Date()) && (storico.concluso != "Da confermare") && (storico.concluso != "Concluso") && (storico.concluso != "Nel passato"))
+          {
+            concluso.push(
+              {
+                "nome_cliente":cliente.nome,
+                "inizio":storico.inizio,
+                "fine":storico.fine,
+                "ufficio":storico.office_id
+              }
+            );
+          }
+        }
+      }
+
+        MongoClient.connect(localMongoUri, async function (err, database) {
+            if (err) throw err;
+            console.log("DB OK - GET OFFICES");
+            var dbo = database.db("SiteDB");
+
+            for(elem of in_corso)
+            {
+              let query_incorso= {nome:elem.nome_cliente, storico_noleggi: { $elemMatch: { office_id: elem.ufficio, inizio:elem.inizio, fine: elem.fine } }};
+              let newval_incorso = {
+                  $set: {
+                      "storico_noleggi.$.concluso": "In corso"
+                  }
+              };
+
+
+              dbo.collection("Clienti").updateOne(query_incorso, newval_incorso, await function (err, result) {
+                  if (err) throw err;
+              });
+            }
+
+            for(elem of concluso)
+            {
+              let query_concluso= {nome:elem.nome_cliente, storico_noleggi: { $elemMatch: { office_id: elem.ufficio, inizio:elem.inizio, fine: elem.fine } }};
+              let newval_concluso = {
+                  $set: {
+                      "storico_noleggi.$.concluso": "Da confermare"
+                  }
+              };
+
+              dbo.collection("Clienti").updateOne(query_concluso, newval_concluso, await function (err, result) {
+                  if (err) throw err;
+              });
+            }
+        });
+        resolve(data);
+    });
+}
+
 /*Endpoint che pemette di ottenere tutte le persone o solo i dati di una*/
 app.get('/mongo/people', async (req, res) => {
     let temp;
-
-    await people().then(
-        resp => {
+    await datecheck().then(
+        async resp => {
             if (!Object.values(req.query).length) {
                 res.status(200).json(resp)
             }
@@ -648,18 +722,8 @@ app.put('/mongo/putpending', (req, res) => {
             }
         }
     }
-    /*Eliminazione di un noleggio*/
-    else if (req.query.type == "del") {
-        let arr_inizio = [];
-        let arr_fine = [];
-        arr_inizio.push(start);
-        arr_fine.push(end);
-
-        newvalue = {
-            $pull: { occupato: { $elemMatch: { from: { $in: arr_inizio }, to: { $in: arr_fine } } } }
-        }
-    }
-    else {
+    else
+    {
         res.status(400).send("query errata");
     }
 
@@ -718,7 +782,9 @@ app.put('/mongo/putnoleggi', (req, res) => {
         $set: {
             "storico_noleggi.$.inizio": data.inizio,
             "storico_noleggi.$.fine": data.fine,
-            "storico_noleggi.$.pagamento": data.costo
+            "storico_noleggi.$.pagamento": data.costo,
+            "storico_noleggi.$.payment": data.payment,
+            "storico_noleggi.$.fattura": data.fattura
         }
     };
 
@@ -763,46 +829,68 @@ app.put('/mongo/putnoleggi', (req, res) => {
 
 })
 
-//////////////////////////////////////////////////////////////////////////////////////
-//AUTH
-require('dotenv').config({ path: `${__dirname}/.env` })
+/*Cancellazione di un noleggio da iniziare e della relativa disponibilitÃ */
+app.delete('/mongo/deletenoleggi', (req, res) => {
+    if (!req.body) {
+        //400 Bad Request
+        res.status(400).send("input sbagliato")
+        return;
+    }
+    let data = req.body;
 
-const jwt = require('jsonwebtoken')
+    let arr_off = [];
+    let arr_start = [];
+    let arr_end = [];
 
-let refreshTokens = []
+    arr_off.push(data.office);
+    arr_start.push(data.inizio);
+    arr_end.push(data.fine);
 
-app.post('/token', (req, res) => {
-    const refreshToken = req.body.token
-    if (refreshToken == null) return res.sendStatus(401)
-    if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403)
-        const accessToken = generateAccessToken({ name: user.name })
-        res.json({ accessToken: accessToken })
-    })
+    const query = { nome: data.nome};
+
+    const newval = {
+        $pull: {
+            storico_noleggi:{ office_id: data.office, inizio: data.inizio, fine: data.fine }
+        }
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////77
+
+    const query_occ = { nome: data.office};
+
+    const newval_occ = {
+        $pull: {
+          occupato: { from: data.inizio, to: data.fine }
+        }
+    };
+
+    MongoClient.connect(localMongoUri, function (err, database) {
+        if (err) throw err;
+        console.log("DB connected!");
+        var dbo = database.db("SiteDB");
+
+        dbo.collection("Clienti").updateOne(query,newval, function (err, ris) {
+            if (err) {
+                throw err;
+                return;
+            }
+
+            console.log(ris);
+        });
+
+        dbo.collection("Uffici").updateOne(query_occ,newval_occ, function (err, ris) {
+            if (err) {
+                throw err;
+                return;
+            }
+
+            console.log(ris);
+        });
+
+    });
+    res.status(200).json("Noleggio eliminato");
+
 })
-
-app.delete('/logout', (req, res) => {
-    refreshTokens = refreshTokens.filter(token => token !== req.body.token)
-    res.sendStatus(204)
-})
-
-app.post('/login', (req, res) => {
-    // Authenticate User
-
-    const username = req.body.username
-    const user = { name: username }
-
-    const accessToken = generateAccessToken(user)
-    const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
-    refreshTokens.push(refreshToken)
-    res.json({ accessToken: accessToken, refreshToken: refreshToken })
-})
-
-function generateAccessToken(user) {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
-}
-
 
 
 const port = process.env.PORT || 8000
