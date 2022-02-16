@@ -1,0 +1,120 @@
+.nav-item {
+    background-color: var(--side);
+    width: 15vw;
+    margin: 0px 0px 0px 0px;
+}
+
+.nav-item a {
+    color: black;
+    font-weight: bold;
+    text-align: left;
+    margin-left:3px;
+    font-size:1.3vw;
+}
+
+.nav-item a:hover {
+    color: white;
+    background-color: #636e72 !important;
+}
+
+.nav-item .title {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: var(--side) !important;
+    color: #790206;
+}
+
+.logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 13vw;
+    height: auto;
+    background: transparent;
+}
+
+.nav-item .active_side {
+    background-color: var(--side) !important;
+    color: red;
+}
+
+.menu {
+    height: 100vh;
+    margin: 0px 10px 0px 0px;
+    background-color: var(--side);
+}
+
+.col-md-auto {
+    padding: 0px 0px 0px 0px !important;
+    height: 100vh !important;
+}
+
+
+@media screen and (max-width: 767px) {
+
+    .menu {
+        margin: auto;
+        width: 100%;
+        height: auto;
+        background-color:var(--base);
+    }
+
+    .nav-item {
+        width: auto;
+        height: auto;
+        position: relative;
+        margin-left:1px;
+        margin-right:1px;
+    }
+
+    .nav-item a {
+        float: none;
+        text-align: center;
+        font-size: 16px;
+        border-bottom:2px solid gray;
+    }
+
+    li:last-child a{
+        border:none;
+    }
+
+    div .content {
+         margin-left: 0;
+    }
+
+    .logo {
+        width: 40vw;
+    }
+
+    .col-md-auto {
+        padding: 0px 0px 0px 0px !important;
+        height: 100% !important;
+    }
+
+    .card_cont{
+      text-align: center;
+    }
+
+    #sidehr{
+      display:none;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .nav-item a {
+        text-align: center;
+        float: none;
+    }
+    .col-md-auto {
+        padding: 0px 0px 0px 0px !important;
+        height: 100% !important;
+    }
+
+    .card_cont{
+      text-align: center;
+    }
+    #sidehr{
+      display:none;
+    }
+}
