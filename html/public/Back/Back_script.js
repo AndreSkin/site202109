@@ -4,8 +4,9 @@ var serverUrl = "https://site202109.tw.cs.unibo.it/";
 $(document).ready(function(){
   setactive_side("home");
 
+
   let auth = localStorage.getItem('permesso');
-  if ((parseInt(auth) < 2) || (localStorage.length < 1))
+  if ((parseInt(auth) < 2) )//|| (localStorage.length < 1))
   {
     window.location.href = serverUrl;
   }

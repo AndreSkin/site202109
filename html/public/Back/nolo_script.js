@@ -14,6 +14,7 @@ async function renderNoleggi()
   `);
 }
 
+//TODO form al posto delle info e non in alto, conferma noleggi, VISUALIZZARE FATTURA, funzionario = sessionstorage
 async function shownolo()
 {
   $("#textdiv").empty();
@@ -48,6 +49,16 @@ async function shownolo()
                 {
                   p+=(`
                     <button type="button" class="btn-primary btn-mod" onclick="modnolo(${i})">Modifica</button>
+                    <button type="button" class="btn-danger btn-mod" onclick="delnolo(${i})">Elimina</button>
+                    <hr>
+                    </div>
+                    </div>
+                    `);
+                }
+                else if (storico.concluso == "Da confermare")
+                {
+                  p+=(`
+                    <button type="button" class="btn-success btn-mod" onclick="confirmnolo(${i})">Conferma restituzione</button>
                     <hr>
                     </div>
                     </div>
@@ -76,6 +87,50 @@ async function shownolo()
        }
   });
 }
+
+async function confirmnolo(i)
+{
+  console.log("OK");
+}
+
+async function delnolo(i)
+{
+  let data = $(`.noleggio${i}`).text().split('; ');
+
+  let dati =[];
+
+  for (let j = 0; j < data.length; j++)
+  {
+    dati.push(data[j].split(': ')[1]!= undefined ? data[j].split(': ')[1].trim():data[j].split(': ')[0].trim());
+  };
+
+  let deldata={
+    "office": dati[0],
+    "nome": dati[1],
+    "inizio": dati[2],
+    "fine": dati[3]
+  }
+
+  console.log(deldata);
+
+  await $.ajax({
+      url: serverUrl + `mongo/deletenoleggi`,
+      type: 'DELETE',
+      data: JSON.stringify(deldata),
+      crossDomain: true,
+      contentType: 'application/json',
+      success: async function (data) {
+        await shownolo();
+        $("#textdiv").prepend(`<div class="success_upd">${data}</div>`);
+        setTimeout(function(){$(".success_upd").remove()}, 10000);
+      },
+      error: function(data) {
+        $("#textdiv").prepend(`<div class="fail_upd">${data}</div>`);
+        setTimeout(function(){$(".fail_upd").remove()}, 10000);
+       }
+     });
+}
+
 
 async function modnolo(i)
 {
