@@ -7,6 +7,7 @@ var buttongroup =`
 async function renderNoleggi()
 {
   $("#textdiv").empty();
+  $("#textdiv").attr("aria-label", "Contenuto principale: Scelta dei noleggi da mostrare");
   $("#textdiv").append(
   `<h2>Area noleggi NoloNolo+</h2>
   ${buttongroup}
@@ -14,9 +15,9 @@ async function renderNoleggi()
   `);
 }
 
-//TODO form al posto delle info e non in alto, conferma noleggi, VISUALIZZARE FATTURA, funzionario = sessionstorage
 async function shownolo()
 {
+  $("#textdiv").attr("aria-label", "Contenuto principale: Noleggi in corso o da cominciare");
   $("#textdiv").empty();
   $("#textdiv").append(`${buttongroup}`);
 
@@ -27,6 +28,7 @@ async function shownolo()
       success: async function (data){
         let p='';
         let i=0;
+
         for(person of data)
         {
           if (person.storico_noleggi != null)
@@ -37,23 +39,27 @@ async function shownolo()
               if (!(new Date(storico.fine) < new Date()) ||(storico.concluso !="Concluso"))
               {
                 p+=(`
+                <div class="rent${i}">
                 <div class="noleggio${i} nolo">
                 <h4> <span id ="or_office">${storico.office_id};</span> </h4>
                 <p>Cliente: <span id ="or_client">${person.Nome};</span> </p>
                 <p>Data di inizio: <span id ="or_start">${storico.inizio}; </span></p>
                 <p>Data di fine: <span id ="or_end">${storico.fine}; </span></p>
                 <p>Pagamento: ${storico.pagamento}; </p>
-                <p>Stato: ${storico.concluso}</p>`);
+                <p>Stato: ${storico.concluso}</p>
+                <button type="button" class="btn-primary btn-mod" onclick="modnolo(${i})">Modifica speciale</button>
+                `);
 
                 if (new Date(storico.inizio) > new Date()) //futuro
                 {
                   p+=(`
-                    <button type="button" class="btn-primary btn-mod" onclick="modnolo(${i})">Modifica</button>
                     <button type="button" class="btn-danger btn-del" onclick="delnolo(${i})">Elimina</button>
                     <hr>
                     </div>
                     </div>
+                    </div>
                     `);
+                    i=i+1;
                 }
                 else if (storico.concluso == "Da confermare")
                 {
@@ -63,17 +69,21 @@ async function shownolo()
                     <hr>
                     </div>
                     </div>
+                    </div>
                     `);
+                    i=i+1;
                 }
                 else
                 {
                   p+=(`
                     <hr>
                     </div>
+                    </div>
+                    </div>
                     `);
+                    i=i+1;
                 }
               }
-                i=i+1;
             }
           }
         }
@@ -123,7 +133,7 @@ async function confirm(i)
       "nome": dati[1],
       "or_inizio": dati[2],
       "or_fine": dati[3],
-      "danno": $('#danni').val(),
+      "danno": parseInt($('#danni').val()),
       "funzionario":JSON.parse(localStorage.getItem('user')).nome
     }
 
@@ -187,6 +197,8 @@ async function modnolo(i)
 {
   $(".btn-mod").attr("disabled", true);
   $(".btn-mod").attr("aria-disabled", true);
+  $("button").attr("disabled", true);
+  $("button").attr("aria-disabled", true);
 
   let data = $(`.noleggio${i}`).text().split('; ');
 
@@ -202,7 +214,7 @@ async function modnolo(i)
 
   $(`.noleggio${i}`).hide();
 
-  $(`.futurenolo`).prepend(`
+  $(`.rent${i}`).append(`
 <div class ="formnoleggio">
   <form>
   <h4>${dati[0]}</h4>
@@ -210,13 +222,13 @@ async function modnolo(i)
 
   <div class="mb-3">
     <label for="startdate" class="form-label">Data di inizio</label>
-    <input type="date" class="form-control" min="${datestring}" value="${dati[2]}" id="startdate" aria-describedby="startdatehelp"required>
+    <input type="date" class="form-control" value="${dati[2]}" id="startdate" aria-describedby="startdatehelp"required>
     <div id="startdatehelp" class="form-text">Data di inizio del noleggio</div>
   </div>
 
   <div class="mb-3">
     <label for="enddate" class="form-label">Data di fine</label>
-    <input type="date" class="form-control" min="${datestring}" value="${dati[3]}" id="enddate" aria-describedby="enddatehelp" required>
+    <input type="date" class="form-control" value="${dati[3]}" id="enddate" aria-describedby="enddatehelp" required>
     <div id="enddatehelp" class="form-text">Data di fine del noleggio</div>
   </div>
 
@@ -301,9 +313,11 @@ await $.ajax({
 
 async function showstory()
 {
+  $("#textdiv").attr("aria-label", "Contenuto principale: Noleggi passati");
   $("#textdiv").empty();
   $("#textdiv").append(`${buttongroup}`);
 
+  let fattura=[];
   await $.ajax({
       url: serverUrl + `mongo/storico`,
       type: 'GET',
@@ -327,14 +341,18 @@ async function showstory()
                 <p>Pagamento: ${storico.pagamento}; </p>
                 <p>Danni: ${storico.danno}; </p>
                 <p>Stato: ${storico.concluso}</p>
-                <button type="button" class="btn btn-fattura btn-warning" onclick="">Visualizza Fattura</button>
+                <button type="button" class="btn btn-fattura btn-warning" onclick="showhidefatt(${i})">Visualizza Fattura</button>
+                <div class="fattura fatt${i}"></div>
                 <hr>
                 </div>`);
-              }
                 i=i+1;
+                fattura.push({"utente":person.Nome,"ufficio":storico.office_id,"danni":storico.danno, "payment":storico.payment, "tot":storico.pagamento,"fattura":storico.fattura});
+              }
             }
           }
         }
+
+
         $("#textdiv").append(`<h2>Noleggi conclusi: </h2>`);
         $("#textdiv").append(`<div class="storynolo">`);
         $("#textdiv").append(`${p}`);
@@ -345,4 +363,43 @@ async function showstory()
         setTimeout(function(){$(".fail_upd").remove()}, 10000);
        }
   });
+
+  let k =0;
+  for(elem of fattura)
+  {
+    $(`.nolo .fatt${k}`).append(`
+      <div class="fattdata hidden">
+        <p>Intestata a: ${elem.utente}</p>
+        <p>Per il noleggio di: ${elem.ufficio}.</p>
+        <br>
+        <p>Prezzo al giorno: ${elem.fattura[0].val} euro,</p>
+        <p>Giorni feriali: ${elem.fattura[1].val},</p>
+        <p>Giorni festivi (-10%): ${elem.fattura[3].val},</p>
+        <p>Weekend: ${elem.fattura[6].val},</p>
+        <p>Subtotale: ${elem.fattura[8].val} euro</p>
+        <p>Sconto fedeltà in percentuale: ${elem.fattura[9].val},</p>
+        <p>Noleggi effettuati: ${elem.fattura[14].val},</p>
+        <p>Modifiche apportate dai dipendenti: ${parseFloat(elem.tot) != parseFloat(elem.fattura[16].val)?"Si":"No"},</p>
+        <p>Danni: ${elem.danni} euro,</p>
+        <p>Totale: ${parseFloat(elem.fattura[16].val) + parseFloat(elem.danni)} euro,</p>
+        <p>Metodo di pagamento: ${elem.payment}</p>
+      </div>
+      `);
+      k=k+1;
+  }
+}
+
+async function showhidefatt(i)
+{
+  if ($(`.fatt${i} .fattdata`).is(":visible"))
+  {
+    $(`.fatt${i} .fattdata`).addClass("hidden");
+    $(`.noleggio${i} .btn-fattura`).text("Visualizza Fattura");
+  }
+  else
+  {
+    $(`.fatt${i} .fattdata`).removeClass("hidden");
+    $(`.noleggio${i} .btn-fattura`).text("Nascondi Fattura");
+  }
+
 }
