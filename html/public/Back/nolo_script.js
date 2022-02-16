@@ -47,7 +47,7 @@ async function shownolo()
                 <p>Data di fine: <span id ="or_end">${storico.fine}; </span></p>
                 <p>Pagamento: ${storico.pagamento}; </p>
                 <p>Stato: ${storico.concluso}</p>
-                <button type="button" class="btn-primary btn-mod" onclick="modnolo(${i})">Modifica speciale</button>
+                <button type="button" class="btn-primary btn-mod" onclick="modnolo(${i})">Modifica</button>
                 `);
 
                 if (new Date(storico.inizio) > new Date()) //futuro
