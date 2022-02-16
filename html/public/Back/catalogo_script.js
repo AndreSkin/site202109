@@ -16,7 +16,7 @@ async function renderCatalogo()
             {
                 $("#textdiv").append(`
                   <div class="office${k}">
-                    <div class="card mb-3" style="max-width: 830px;">
+                    <div class="card mb-3" style="max-width: 850px;">
                       <div class="row g-0">
                         <div class="col-md-4 card_cont">
                           <img src=${office.img} class="img-fluid rounded-start officeimg" alt="Immagine dell'ufficio chiamato ${office.nome}">

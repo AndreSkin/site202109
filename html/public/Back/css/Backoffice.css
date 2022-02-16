@@ -63,6 +63,17 @@ hr {
     color:black;
 }
 
+.btn-danger:disabled{
+    background-color:lightgray;
+    color:black;
+    border:1px solid black;
+}
+
+.btn-danger:disabled:hover{
+    background-color:gray !important;
+    color:black;
+}
+
 .selform{
   height: 40px;
   font-size: 15px;
@@ -134,4 +145,13 @@ text-align: center;
   background-color: lightgray;
   color:black;
   display: inline-block;
+}
+
+.fattdata{
+  border:1px solid black;
+  margin-top: 10px;
+}
+
+.fattdata p{
+  margin-left: 20px;
 }
