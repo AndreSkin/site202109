@@ -27,7 +27,7 @@ async function setactive_side(id)
     switch (id)
     {
         case "home":
-            await renderHome();
+            renderHome();
             break;
 
         case "catalogo":
