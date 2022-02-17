@@ -1,8 +1,8 @@
-var calendar_change = false;
+var calendar_change = false; //se è stato premuto il bottone delle disponibilità diventa true
 
 async function renderCatalogo()
 {
-  var calendar_change = false;
+  calendar_change = false;
 
     $("#textdiv").empty();
     $("#textdiv").attr("aria-label", "Contenuto principale: Elenco degli uffici");
@@ -12,6 +12,7 @@ async function renderCatalogo()
         url: serverUrl + "mongo/offices",
         crossDomain: true,
         success: async function (data) {
+          //Append di tutti i dati degli uffici
             for(office of data)
             {
                 $("#textdiv").append(`
@@ -36,7 +37,7 @@ async function renderCatalogo()
                             <p class="card-text">Annotazioni: ${office.annotazione};</p>
                           </div>
                           <div class="occupato_text"
-                          <p class="card-text occupato">${await getoccupato(data, k) == '' ? `<br> Disponibilità non limitata`: `<br><h4>Indisponibile:</h4> ${await getoccupato(data, k)}`} </p>
+                          <p class="card-text occupato">${getoccupato(data, k) == '' ? `<br> Disponibilità non limitata`: `<br><h4>Indisponibile:</h4> ${getoccupato(data, k)}`} </p>
                           </div>
                           </div>
                         </div>
@@ -50,10 +51,12 @@ async function renderCatalogo()
             $("#textdiv").prepend(`
               <div class="butdiv">
               <button type"button" class="btn-success btn-showoccupato" onclick="showoccupato(false)" aria-label="Visualizza le date in cui gli uffici non sono disponibili">Visualizza le disponibilità</button>
+              <p role="alert" class="sr-only sr-only-focusable">Catalogo caricato</p>
               </div>`);
             $(".occupato_text").hide();
 
             let i = 0;
+            //Se l'ufficio è non disponibile fino a nuova comunicazione lo lo rendo grigio
             for(occupato of $(`.occupato_text`))
             {
               if($(occupato).text().includes("Nuova comunicazione"))
@@ -63,44 +66,62 @@ async function renderCatalogo()
               i=i+1;
             }
         },
-        error: function () { console.log("error in renderCatalogo") }
-    })
+        error: function () {
+          $("#textdiv").prepend(`<div class="fail_upd">C'è stato un errore <p role="alert" class="sr-only sr-only-focusable">C'è stato un errore</p> </div>`);
+          setTimeout(function(){$(".fail_upd").remove()}, 10000);
+         }
+    });
 }
 
-
-async function showoccupato(showhide)
+//Mostra o nosconde le date di disponibilità
+function showoccupato(showhide)
 {
   if (showhide)
   {
     $(".occupato_text").hide();
     $(".btn-showoccupato").text("Visualizza le disponibilità");
     $(".btn-showoccupato")[0].onclick = function() {showoccupato(false)};
-    $(".btn-showoccupato").prop("aria-label", "Visualizza le date in cui gli uffici non sono disponibili");
+    $(".btn-showoccupato").attr("aria-label", "Visualizza le date in cui gli uffici non sono disponibili");
   }
   else
   {
     $(".occupato_text").show();
     $(".btn-showoccupato").text("Nascondi le disponibilità");
     $(".btn-showoccupato")[0].onclick = function() {showoccupato(true)};
-    $(".btn-showoccupato").prop("aria-label", "Nascondi le date in cui gli uffici non sono disponibili");
+    $(".btn-showoccupato").attr("aria-label", "Nascondi le date in cui gli uffici non sono disponibili");
   }
 }
 
-
-async function modifica_catalogo(k)
+//Funzione per modifiche ad un ufficio
+function modifica_catalogo(k)
 {
   calendar_change = false;
+  //disabilito i bottoni di modifica
   $(".btn-modifica").attr("disabled", true);
   $(".btn-modifica").attr("aria-disabled", true);
+
+  //Ottengo i dati e ne effettuo un parsing per inserirli nell'array dati
   let data = $(`#cat${k}`).text().split(";");
   let dati =[];
 
-
   for (let j = 0; j < data.length; j++)
   {
+    //Viene preso ciò che è scritto dopo :, nel caso del nome dell'ufficio. viene isolato solo quello
     dati.push(data[j].split(': ')[1]!= undefined ? data[j].split(': ')[1].trim():data[j].split(': ')[0].trim());
   }
+  /*
+  dati : []
+  0: nome Ufficio
+  1: Indirizzo dell'Ufficio
+  2: Metri quadri dell'Ufficio
+  3: tier dell'Ufficio
+  4: Stato dell'Ufficio
+  5: Costo costo_base
+  6: Descrizione
+  7: annotazioni (non visibili al cliente)
+  */
 
+  //Nascondo i dati dell'ufficio e li sostituisco con un form
   $(`#cat_data${k}`).hide();
   $(`#cat${k}`).prepend(`
     <form aria-label="Form di modifica dell'ufficio">
@@ -165,27 +186,33 @@ async function modifica_catalogo(k)
       <button type="submit" class="btn btn-danger" onclick="delete_cat('${dati[0]}')">Elimina ufficio</button>
       <button type="button" class="btn btn-warning" onclick="resetform_cat(${k})">Annulla</button>
   </form>
+  <p role="alert" class="sr-only sr-only-focusable">Form di moficia generato</p>
+
 `);
 
+//Rendo tutti i campi di input obbligatori
 $("form input").attr("required", true);
 $("form #desc").attr("required", true);
 
 $("form").submit(function(e) {
+  //Evito il submit immediato per poter chiamare le relative funzioni
     e.preventDefault();
 });
 }
 
-
+//Conferma le modiifche al catalogo
 async function change_cat(identifier, disp=false)
 {
   let occupato = [];
   let formdata = {};
   let type="";
 
+  //Se sono presenti input[type=date] li uso per modificare la disponibilità
   let calendars = $(`.calendar`);
 
   if (disp)
   {
+    //In caso l'ufficio debba essere non disponibile fino a nuova comunicazione
     type="officedisp"
 
     formdata= {
@@ -195,18 +222,19 @@ async function change_cat(identifier, disp=false)
   else
   {
     type="office";
-
+    //Se ci sono calendari o è stato premuto il bottone disponibilità
     if ((calendars.length > 0) || (calendar_change == true) )
     {
       let cal=[];
       for (let i = 0; i < calendars.length +1; i++)
       {
+        //Trovo i calendari effettivamente ancora presenti
         if ($(`#start${i}`).val() != undefined)
         {
           cal.push(i);
         }
       }
-
+      //inserisco le date in un array
       for(index of cal)
       {
         occupato.push({
@@ -217,9 +245,11 @@ async function change_cat(identifier, disp=false)
     }
     else
     {
+      //Se non è necessario modificare le date
       occupato= null;
     }
 
+    //Dati da inviare al server
     formdata= {
       "ToChange":identifier,
       "nome":$(`#name`).val(),
@@ -233,6 +263,7 @@ async function change_cat(identifier, disp=false)
       "occupato":occupato
     };
 
+    //Controllo validità degli input per sicurezza
     for(input of $("input"))
     {
       if (!(input.checkValidity()))
@@ -249,36 +280,41 @@ async function change_cat(identifier, disp=false)
     }
   }
 
-
+//Se va tutto bene effettuo la PUT
 await $.ajax({
     url: serverUrl + `mongo/puthere?type=${type}`,
     type: 'PUT',
     data: JSON.stringify(formdata),
     crossDomain: true,
     contentType: 'application/json',
-    success: async function (data) {
-      await renderCatalogo();
+    success: function (data) {
+      $("#textdiv").prepend(`<p role="alert" class="sr-only sr-only-focusable">Modifiche completate, la pagina verrà ricaricata</p>`);
+      renderCatalogo();
       $("#textdiv").prepend(`<div class="success_upd">${data.msg}</div>`);
       setTimeout(function(){$(".success_upd").remove()}, 10000);
     },
     error: function(data) {
-      $("#textdiv").prepend(`<div class="fail_upd">${data}</div>`);
+      $("#textdiv").prepend(`<div class="fail_upd">${data} <p role="alert" class="sr-only sr-only-focusable">C'è stato un errore</p> </div>`);
       setTimeout(function(){$(".fail_upd").remove()}, 10000);
      }
    });
 }
 
+//Per eliminare un ufficio dal catalogo
 async function delete_cat(identifier)
 {
+  //Verifico se l'ufficio è stato noleggiato
   let bool = 0;
   await noleggiato(identifier).then(resp=> bool = resp);
 
   if (bool)
   {
+    //Se si lo rendo indisponibile fino a nuova comunicazione
       change_cat(identifier, true);
   }
   else
   {
+    //Altrimenti lo elimino
     await $.ajax({
         url: serverUrl + `mongo/deletehere?type=office`,
         type: 'DELETE',
@@ -286,19 +322,20 @@ async function delete_cat(identifier)
         crossDomain: true,
         contentType: 'application/json',
         success: async function (data) {
-          await renderCatalogo();
+          $("#textdiv").prepend(`<p role="alert" class="sr-only sr-only-focusable">Ufficio eliminato, la pagina verrà ricaricata</p>`);
+          renderCatalogo();
           $("#textdiv").prepend(`<div class="success_upd">${data.msg}</div>`);
           setTimeout(function(){$(".success_upd").remove()}, 10000);
         },
         error: function(data) {
-          $("#textdiv").prepend(`<div class="fail_upd">${data}</div>`);
+          $("#textdiv").prepend(`<div class="fail_upd">${data} <p role="alert" class="sr-only sr-only-focusable">C'è stato un errore</p> </div>`);
           setTimeout(function(){$(".fail_upd").remove()}, 10000);
          }
     });
   }
 }
 
-
+//Funzione che mostra i calendari con le date di non disponibilità
 async function disp(k)
 {
   calendar_change = true;
@@ -332,11 +369,12 @@ if (k!=-1) {
         }
       },
       error: function(data) {
-        console.log("error in disp: " + data);
-       }
+        $("#textdiv").prepend(`<div class="fail_upd">${data} <p role="alert" class="sr-only sr-only-focusable">C'è stato un errore</p> </div>`);
+        setTimeout(function(){$(".fail_upd").remove()}, 10000);       }
   });
 }
 
+//Aggiungo una nuova data
     $(`.disponibilita`).append(`${occuP}
       <div class="date${i}">
       <h5><b>Nuova data:</b></h5>
@@ -347,6 +385,7 @@ if (k!=-1) {
         <input type="date" class="calendar" id="end${i}" name="disp_end${i}" min="${datestring}" value="${datestring}">
 
         <button type="button" class="btn btn-revoke" aria-label="Elimina queste date" onclick="revokedisp(${i})">&times</button>
+        <p role="alert" class="sr-only sr-only-focusable">Date di non disponibilita caricate</p>
       </div>
       `);
 
@@ -356,22 +395,22 @@ if (k!=-1) {
 
       let calendars = $(`.calendar`);
 
-      let c = 0;
       for (let j = 0; j < calendars.length; j+=2)
       {
         (calendars[j]).onchange = function() {let id_start = calendars[j].id; let id_num = parseInt(id_start.charAt(id_start.length-1)); change_calendar(id_num);}
       }
 }
 
-async function revokedisp(i)
+//Funzione che rimuove le date di non disponibilità
+function revokedisp(i)
 {
    $(`.date${i}`).remove();
    $(`#end${i}`).remove();
    $(`#start${i}`).remove();
-
 }
 
-async function change_calendar(k)
+//Funzione di coerenza per i calendari
+function change_calendar(k)
 {
    $(`#end${k}`).prop("min", `${$(`#start${k}`).val()}`);
 
@@ -381,7 +420,7 @@ async function change_calendar(k)
    }
 };
 
-
+//Verifica se un ufficio è stato noleggiato
 async function noleggiato(identifier)
 {
   let found= false;
@@ -409,13 +448,16 @@ async function noleggiato(identifier)
           }
         }
       },
-      error: function() { console.log("error in noleggiato") }
+      error: function() {
+        $("#textdiv").prepend(`<div class="fail_upd">C'è stato un errore <p role="alert" class="sr-only sr-only-focusable">C'è stato un errore</p> </div>`);
+      setTimeout(function(){$(".fail_upd").remove()}, 10000);
+    }
   });
   return found;
 }
 
-
-async function getoccupato(data, i)
+//Ottiene le date di non disponibilità e crea un template literal
+function getoccupato(data, i)
 {
     let p ='';
     const dateoptions = {year: 'numeric', month: 'long', day: 'numeric' };
@@ -442,8 +484,8 @@ async function getoccupato(data, i)
     return p;
 }
 
-
-async function resetform_cat(k)
+//Tasto annulla: elimina il form
+function resetform_cat(k)
 {
     $(`#cat${k} form`).empty();
     $(`#cat_data${k}`).show();

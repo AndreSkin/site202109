@@ -4,6 +4,7 @@ var buttongroup =`
   <button type="button" class="btn-success" onclick="showstory()">Visualizza lo storico noleggi</button>
 <div>`
 
+//Mostra i pulsanti
 async function renderNoleggi()
 {
   $("#textdiv").empty();
@@ -12,9 +13,11 @@ async function renderNoleggi()
   `<h2>Area noleggi NoloNolo+</h2>
   ${buttongroup}
   <hr>
+  <p role="alert" class="sr-only sr-only-focusable">Pagina noleggi caricata: effettuare una scelta</p>
   `);
 }
 
+//Noleggi in corso o futuri
 async function shownolo()
 {
   $("#textdiv").attr("aria-label", "Contenuto principale: Noleggi in corso o da cominciare");
@@ -90,16 +93,18 @@ async function shownolo()
         $("#textdiv").append(`<h2>Noleggi in corso o futuri:</h2>`);
         $("#textdiv").append(`<div class="futurenolo">`);
         $("#textdiv").append(`${p}`);
+        $("#textdiv").prepend(`<p role="alert" class="sr-only sr-only-focusable">Noleggi in corso o futuri caricati</p>`);
       },
 
       error: function(data){
-        $("#textdiv").prepend(`<div class="fail_upd">${data}</div>`);
+        $("#textdiv").prepend(`<div class="fail_upd">C'è stato un errore <p role="alert" class="sr-only sr-only-focusable">C'è stato un errore</p> </div>`);
         setTimeout(function(){$(".fail_upd").remove()}, 10000);
        }
   });
 }
 
-async function confirmnolo(i)
+//Quando viene premuto il tasto di conferma restituzione appare il form per i danni
+function confirmnolo(i)
 {
   $("button").prop("disabled", true);
   $("button").prop("aria-disabled", true);
@@ -114,9 +119,11 @@ async function confirmnolo(i)
       <button type="button" class="btn-success btn-mod" onclick="confirm(${i})">Conferma</button>
       <button type="button" class="btn-warning btn-del" onclick="annullaform(${i})">Annula</button>
     </form>
+    <p role="alert" class="sr-only sr-only-focusable">Form danni caricato</p>
     `);
 }
 
+//Accettazione noleggio
 async function confirm(i)
 {
   let data = $(`.noleggio${i}`).text().split('; ');
@@ -155,6 +162,7 @@ async function confirm(i)
        });
   }
 
+//Cancellazione noleggio
 async function delnolo(i)
 {
   let data = $(`.noleggio${i}`).text().split('; ');
@@ -192,8 +200,8 @@ async function delnolo(i)
      });
 }
 
-
-async function modnolo(i)
+//Form modifica noleggio
+function modnolo(i)
 {
   $(".btn-mod").attr("disabled", true);
   $(".btn-mod").attr("aria-disabled", true);
@@ -244,6 +252,7 @@ async function modnolo(i)
   <hr>
   </form>
   </div>
+  <p role="alert" class="sr-only sr-only-focusable">Form modifica noleggio caricato</p>
   `);
 
   $(`form #startdate`)[0].onchange = function()
@@ -261,7 +270,8 @@ async function modnolo(i)
   });
 }
 
-async function annullaform(i)
+//Tasto annulla
+function annullaform(i)
 {
     $("form").remove();
     $(`.noleggio${i}`).show();
@@ -270,6 +280,7 @@ async function annullaform(i)
     $("button").attr("aria-disabled", false);
 }
 
+//PUT per modifica noleggi
 async function putnolo(i)
 {
 
@@ -311,6 +322,7 @@ await $.ajax({
    });
 }
 
+//Storico noleggi
 async function showstory()
 {
   $("#textdiv").attr("aria-label", "Contenuto principale: Noleggi passati");
@@ -356,14 +368,16 @@ async function showstory()
         $("#textdiv").append(`<h2>Noleggi conclusi: </h2>`);
         $("#textdiv").append(`<div class="storynolo">`);
         $("#textdiv").append(`${p}`);
+        $("#textdiv").append(`<p role="alert" class="sr-only sr-only-focusable">Storiconoleggi caricato</p>`);
       },
 
       error: function(data){
-        $("#textdiv").prepend(`<div class="fail_upd">${data}</div>`);
+        $("#textdiv").prepend(`<div class="fail_upd">${data} <p role="alert" class="sr-only sr-only-focusable">C'è stato un errore</p> </div>`);
         setTimeout(function(){$(".fail_upd").remove()}, 10000);
        }
   });
 
+  //Crea fattura
   let k =0;
   for(elem of fattura)
   {
@@ -389,17 +403,20 @@ async function showstory()
   }
 }
 
+//Mostra o nasconde la fattura
 async function showhidefatt(i)
 {
   if ($(`.fatt${i} .fattdata`).is(":visible"))
   {
     $(`.fatt${i} .fattdata`).addClass("hidden");
     $(`.noleggio${i} .btn-fattura`).text("Visualizza Fattura");
+    $(`.fatt${i} .fattdata`).append(`<p role="alert" class="sr-only sr-only-focusable">Fattura nascosta</p>`)
   }
   else
   {
     $(`.fatt${i} .fattdata`).removeClass("hidden");
     $(`.noleggio${i} .btn-fattura`).text("Nascondi Fattura");
+    $(`.fatt${i} .fattdata`).append(`<p role="alert" class="sr-only sr-only-focusable">Fattura disponibile</p>`)
   }
 
 }
