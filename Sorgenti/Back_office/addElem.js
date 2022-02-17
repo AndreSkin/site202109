@@ -3,13 +3,18 @@ async function renderAddelem() {
     $("#textdiv").empty();
     $("#textdiv").append(`
       <h3>Aggiungi un utente o un ufficio</h3>
+      <div class="butdiv">
         <button type="button" class="btn btn-success disp-btn" onclick="renderaddPerson()">Aggiungi un utente</button>
         <button type="button" class="btn btn-success disp-btn" onclick="renderaddOffice()">Aggiungi un ufficio</button>
+        <p role="alert" class="sr-only sr-only-focusable">Pagina aggiungi caricata: scegliere la funzione desiderata</p>
+        </div>
+        <hr>
       `)
       $("#textdiv").attr("aria-label", "Contenuto principale: Scelta dell'elemento da aggiungere");
 }
 
 async function renderaddPerson() {
+  //Form per inserire persone
   let url = serverUrl + 'mongo/posthere'
   let type = 'user';
     $("#textdiv").empty();
@@ -71,6 +76,7 @@ async function renderaddPerson() {
     <button type="submit" class="btn btn-primary" >Aggiungi</button>
     <button type="button" class="btn btn-warning" onclick="renderAddelem()">Annulla</button>
 </form>
+<p role="alert" class="sr-only sr-only-focusable">Form per aggiungere persone caricato</p>
 `);
 
     $("form input").attr("required", true);
@@ -122,6 +128,7 @@ async function renderaddPerson() {
 
 
 async function renderaddOffice() {
+  //Form per aggiungere uffici
   let url = serverUrl + 'mongo/posthere'
     $("#textdiv").empty();
     $("#textdiv").attr("aria-label", "Contenuto principale: form per inserire un nuovo ufficio");
@@ -192,6 +199,7 @@ async function renderaddOffice() {
         <button type="submit" class="btn btn-primary">Aggiungi</button>
         <button type="button" class="btn btn-warning" onclick="renderAddelem()">Annulla</button>
     </form>
+    <p role="alert" class="sr-only sr-only-focusable">Form per inserire uffici caricato</p>
   `);
     $("input").attr("required", true);
     $("#ann").attr("required", false);

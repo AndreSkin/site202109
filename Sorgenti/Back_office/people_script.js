@@ -9,6 +9,7 @@ async function renderAnagrafica()
         url: serverUrl + "mongo/people",
         crossDomain: true,
         success: async function (data) {
+          //Append dei dati clienti
             for (user of data['Clienti']) {
                 $("#textdiv").append(`
                     <div class="card mb-3" style="max-width: 600px;">
@@ -29,7 +30,7 @@ async function renderAnagrafica()
                             <p class="card-text dato">Tier cliente: ${user.tier_cliente}; </p>
                             </div>
                             <div class="storico_text"
-                            <p class="card-text storico">${await getstorico(data, i) == '' ? `<br> Nessun noleggio effettuato`: `<br><h4>Storico noleggi:</h4> ${await getstorico(data, i)}`} </p>
+                            <p class="card-text storico">${getstorico(data, i) == '' ? `<br> Nessun noleggio effettuato`: `<br><h4>Storico noleggi:</h4> ${getstorico(data, i)}`} </p>
                             </div>
                             </div>
                           </div>
@@ -42,15 +43,20 @@ async function renderAnagrafica()
             $("#textdiv").prepend(`
               <div class="butdiv">
               <button type"button" class="btn-success btn-showstorico" onclick="showstorico(false)" aria-label="Visualizza lo storico noleggi dei clienti">Visualizza storico noleggi</button>
+              <p role="alert" class="sr-only sr-only-focusable">Utenti caricati</p>
               </div>`);
 
              $(".storico_text").hide();
 
         },
-        error: function() { console.log("error in renderAnagrafica") }
+        error: function() {
+          $("#textdiv").prepend(`<div class="fail_upd">C'è stato un errore <p role="alert" class="sr-only sr-only-focusable">C'è stato un errore</p> </div>`);
+          setTimeout(function(){$(".fail_upd").remove()}, 10000);
+        }
     })
 }
 
+//Mostra o nasconde lo storico noleggi
 async function showstorico(showhide)
 {
   if (showhide)
@@ -69,8 +75,8 @@ async function showstorico(showhide)
   }
 }
 
-
-async function getstorico(data, i)
+//Ricava lo storico noleggi e lo mette in un template literal
+function getstorico(data, i)
 {
     let p =''
     if (data.Clienti[i].storico_noleggi != null) {
@@ -93,8 +99,8 @@ async function getstorico(data, i)
     return p;
 }
 
-
-async function modifica_carta(i)
+//Fa comparire il form di modifica degli utenti
+function modifica_carta(i)
 {
     $(".btn-modifica").attr("disabled", true);
     $(".btn-modifica").attr("aria-disabled", true);
@@ -107,7 +113,16 @@ async function modifica_carta(i)
     {
       dati.push(data[j].split(': ')[1]!= undefined ? data[j].split(': ')[1].trim():data[j].split(': ')[0].trim());
     }
+    /*
+    dati : []
+    0: nome cliente
+    1: Indirizzo cliente
+    2: Mail cliente
+    3: annotazioni (non visibili al cliente)
+    4: Tier cliente
+    */
 
+    //Compare il form di modifica
     $(`#pers_data${i}`).hide();
     $(`#carta${i}`).prepend(`
         <form arial-label="Form di modifica dell'utente">
@@ -145,6 +160,7 @@ async function modifica_carta(i)
           <button type="submit" class="btn btn-danger btn-delete" onclick="delete_ppl('${dati[0]}')">Elimina utente</button>
           <button type="button" class="btn btn-warning" onclick="resetform_ppl(${i})">Annulla</button>
     </form>
+    <p role="alert" class="sr-only sr-only-focusable">Form di modifica dell'utente caricato</p>
     `);
 
     $("form input").attr("required", true);
@@ -154,6 +170,7 @@ async function modifica_carta(i)
     });
 }
 
+//Conferma modifiche cliente
 async function change_ppl(identifier)
 {
   let formdata= {
@@ -181,18 +198,20 @@ await $.ajax({
     crossDomain: true,
     contentType: 'application/json',
     success: async function (data) {
-      await renderAnagrafica();
+      $("#textdiv").prepend(`<p role="alert" class="sr-only sr-only-focusable">Modifiche completate, la pagina verrà ricaricata</p>`);
+      renderAnagrafica();
       $("#textdiv").prepend(`<div class="success_upd">${data.msg}</div>`);
       setTimeout(function(){$(".success_upd").remove()}, 10000);
     },
     error: function(data) {
-      $("#textdiv").prepend(`<div class="fail_upd">${data}</div>`);
+      $("#textdiv").prepend(`<div class="fail_upd">${data} <p role="alert" class="sr-only sr-only-focusable">C'è stato un errore</p> </div>`);
       setTimeout(function(){$(".fail_upd").remove()}, 10000);
      }
 });
 
 }
 
+//Verifica se un cliente ha noleggi in corso
 async function hasrent(identifier)
 {
   let rented= false;
@@ -209,12 +228,16 @@ async function hasrent(identifier)
           }
         }
     },
-      error: function() { console.log("error in hasrent") }
+      error: function() {
+        $("#textdiv").prepend(`<div class="fail_upd">C'è stato un errore <p role="alert" class="sr-only sr-only-focusable">C'è stato un errore</p> </div>`);
+        setTimeout(function(){$(".fail_upd").remove()}, 10000);
+        }
   });
 
   return rented;
 }
 
+//Elimina un utente se non ha noleggi in corso
 async function delete_ppl(identifier)
 {
   let bool = 0;
@@ -222,7 +245,9 @@ async function delete_ppl(identifier)
 
   if (bool)
   {
-    $("form").append(`<div class="fail_upd">Questo cliente ha noleggi in corso o prenotati, impossibile eliminare<div>`);
+    $("form").append(`
+      <div class="fail_upd">Questo cliente ha noleggi in corso o prenotati, impossibile eliminare<div>
+      <p role="alert" class="sr-only sr-only-focusable">Impossibile elminare</p>`);
     $(".btn-delete").attr("disabled", true);
     $(".btn-delete").attr("aria-disabled", true);
     return;
@@ -234,18 +259,19 @@ async function delete_ppl(identifier)
       crossDomain: true,
       contentType: 'application/json',
       success: async function (data) {
-        await renderAnagrafica();
+        $("#textdiv").prepend(`<p role="alert" class="sr-only sr-only-focusable">Modifiche completate, la pagina verrà ricaricata</p>`);
+        renderAnagrafica();
         $("#textdiv").prepend(`<div class="success_upd">${data.msg}</div>`);
         setTimeout(function(){$(".success_upd").remove()}, 10000);
       },
       error: function(data) {
-        $("#textdiv").prepend(`<div class="fail_upd">${data}</div>`);
+        $("#textdiv").prepend(`<div class="fail_upd">${data} <p role="alert" class="sr-only sr-only-focusable">C'è stato un errore</p> </div>`);
         setTimeout(function(){$(".fail_upd").remove()}, 10000);
        }
   });
 }
 
-
+//Tasto annulla: ripristina lo stato precedente
 async function resetform_ppl(i)
 {
     $(`#carta${i} form`).remove();
