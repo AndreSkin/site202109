@@ -1,0 +1,87 @@
+<app-widgets-dropdown></app-widgets-dropdown>
+<c-card class="mb-4">
+  <c-card-body>
+    <c-row>
+      <c-col sm="5">
+        <h4 class="card-title mb-0" id="traffic">
+          Noleggi
+        </h4>
+        <div class="medium text-medium-emphasis">{{displayed_month[1]}} {{GetYear()}}
+
+        </div>
+      </c-col>
+      <c-col class="d-none d-md-block" sm="7">
+        <form [formGroup]="trafficRadioGroup">
+          <c-button-group class="float-end me-3" role="group">
+            <input
+              aria-label="Imposta grafico per Mese"
+              class="btn-check"
+              formControlName="trafficRadio"
+              type="radio"
+              value="Month"
+            />
+            <label
+              (click)="setTrafficPeriod('Month')"
+              cButton
+              cFormCheckLabel
+              color="secondary"
+              variant="outline"
+            >Mese</label>
+
+            <input
+              aria-label="Imposta grafico per Anno"
+              class="btn-check"
+              formControlName="trafficRadio"
+              type="radio"
+              value="Year"
+            />
+            <label
+              (click)="setTrafficPeriod('Year')"
+              cButton
+              cFormCheckLabel
+              color="secondary"
+              variant="outline"
+            >Anno</label>
+          </c-button-group>
+        </form>
+        <c-button-group class="float-end me-3" role="group">
+              <input
+                aria-label="Seleziona Mese/Anno precedente"
+                class="btn-check"
+                type="radio"
+                value="Month"
+              />
+              <label
+                (click)="setMonth_Year(false)"
+                cButton
+                cFormCheckLabel
+                color="secondary"
+                variant="outline"
+              > &lt; </label>
+
+              <input
+                aria-label="Seleziona Mese/Anno successivo"
+                class="btn-check"
+                type="radio"
+                value="Year"
+              />
+              <label
+                (click)="setMonth_Year(true)"
+                cButton
+                cFormCheckLabel
+                color="secondary"
+                variant="outline"
+              > &gt; </label>
+            </c-button-group>
+      </c-col>
+    </c-row>
+    <c-chart *ngIf="this.chart[2].length != 0"
+            [data]="this.chart[2]"
+            [height]="300"
+            [ngStyle]="{'marginTop.px': 40}"
+            [options]="this.chart[1]"
+            [type]="this.chart[0]">
+    </c-chart>
+  </c-card-body>
+</c-card>
+

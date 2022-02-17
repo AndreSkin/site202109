@@ -1,0 +1,101 @@
+<c-row>
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-header>{{nome_cliente}}</c-card-header>
+      <c-card-body>
+        <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          align="middle"
+          cTable
+          class="mb-0 border"
+        >
+          <thead cTableColor="light">
+          <tr>
+            <th
+            aria-label="Immagini Profilo"
+            class="text-center">
+              <svg cIcon name="cilPeople"></svg>
+            </th>
+            <th>Uffici</th>
+            <th class="text-center">Guadagno/Danni</th>
+            <th class="text-center">Inizo Noleggio</th>
+            <th class="text-center">Fine Noleggio</th>
+            <th class="text-center">Stato Noleggio</th>
+            <th class="text-center">Metodo Pagamento</th>
+          </tr>
+          </thead>
+          <tbody>
+          <ng-container *ngFor="let user of storico_data; index as i">
+            <ng-container *ngIf="VerificaStorico(nome_cliente, user.Nome)">
+              <tr *ngFor="let noleggio of user['storico_noleggi']; index as j">
+                <td class="text-center">
+                  <c-avatar
+                    (click)="NavigateToStorico(noleggio.office_id)"
+                    style="cursor: pointer;"
+                    size="md"
+                    src="{{ GetImmagine(user['storico_noleggi'], noleggio.office_id) }}"
+                    status="{{ GetStatus(user['storico_noleggi'], noleggio.office_id) }}"
+                  >
+                  </c-avatar>
+                </td>
+                <td>
+                  <div>{{ noleggio.office_id }}</div>
+                  <div class="small text-medium-emphasis">
+                    Funzionario: <span>{{ noleggio.funzionario }}</span>
+                    <br>
+                    Indirizzo:
+                    {{ GetIndirizzoNoleggio(noleggio.office_id, offices_data) }}
+                  </div>
+                </td>
+                <td class="text-center">
+                  <div class="clearfix">
+                    <div class="float-start">
+                      <strong>{{ noleggio.pagamento }}€</strong>
+                    </div>
+                    <div class="float-end">
+                      <small class="text-medium-emphasis">
+                        {{ noleggio.danno }}€
+                      </small>
+                    </div>
+                  </div>
+                  <c-progress thin
+                  >
+                    <c-progress-bar
+                      [value]="PercentualeBarre(noleggio.danno, noleggio.pagamento, true)"
+                      color='success'
+                    ></c-progress-bar
+                    >
+
+                    <c-progress-bar
+                      [value]="PercentualeBarre(noleggio.danno, noleggio.pagamento, false)"
+                      color='danger'
+                    ></c-progress-bar
+                    >
+                  </c-progress
+                  >
+                </td>
+                <td class="text-center">
+                  <div class="small text-medium-emphasis">Inizio</div>
+                  <strong>{{ noleggio.inizio }}</strong>
+                </td>
+                <td class="text-center">
+                  <div class="small text-medium-emphasis">Fine</div>
+                  <strong>{{ noleggio.fine }}</strong>
+                </td>
+                <td class="text-center">
+                  {{ noleggio.concluso }}
+                </td>
+                <td class="text-center">
+                  <svg cIcon name="cibCc{{ noleggio.payment }}" size="xxl"></svg>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

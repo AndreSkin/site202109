@@ -1,0 +1,113 @@
+<c-row>
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-header>Uffici</c-card-header>
+      <c-card-body>
+        <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          align="middle"
+          cTable
+          class="mb-0 border"
+        >
+          <thead cTableColor="light">
+          <tr>
+            <th
+            aria-label="Immagini Profilo"
+            class="text-center">
+              <svg cIcon name="cilPeople" aria-label="Immagini Profilo"></svg>
+            </th>
+            <th>Uffico</th>
+            <th class="text-center">Costo</th>
+            <th class="text-center">Numero noleggi</th>
+            <th class="text-center">Guadagno/Manutenzione</th>
+            <th class="text-center">Condizioni</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let ufficio of offices_data; index as i">
+            <td class="text-center">
+              <c-avatar
+                (click)="NavigateToStorico(ufficio.nome)"
+                style="cursor: pointer;"
+                size="md"
+                src="{{ ufficio.img }}"
+                status="{{ GetStatus(storico_data, ufficio.nome) }}"
+              >
+              </c-avatar>
+            </td>
+            <td>
+              <div>{{ ufficio.nome }}</div>
+              <div class="small text-medium-emphasis">
+                Indirizzo:
+                {{ ufficio.indirizzo }}
+                <br>
+                Tier:
+                {{ ufficio.tier }}
+              </div>
+            </td>
+            <td class="text-center">
+              <strong>{{ ufficio.costo_base }}€</strong>
+            </td>
+            <td class="text-center">
+              <strong>{{ GetNumeroNoleggi(ufficio.nome, storico_data)}}</strong>
+            </td>
+            <td>
+              <div class="clearfix">
+                <div class="float-start">
+                  <strong>{{ Somme(storico_data, ufficio.nome, true) }}€</strong>
+                </div>
+                <div class="float-end">
+                  <small class="text-medium-emphasis">
+                    {{ Somme(storico_data, ufficio.nome, false) }}€
+                  </small>
+                </div>
+              </div>
+              <c-progress thin
+              >
+                <c-progress-bar
+                  [value]="PercentualeBarre(storico_data, ufficio.nome, true)"
+                  color='success'
+                ></c-progress-bar
+                >
+
+                <c-progress-bar
+                [value]="PercentualeBarre(storico_data, ufficio.nome, false)"
+                color='danger'
+                ></c-progress-bar
+                >
+              </c-progress
+              >
+            </td>
+            <td class="text-center">
+              <div class="small text-medium-emphasis">{{ ufficio.stato }}</div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+  <c-row>
+    <c-col xs="12" lg="6">
+      <c-card class="mb-4">
+        <c-card-header>
+          Guadagni per Tier
+        </c-card-header>
+        <c-card-body>
+          <c-chart type="doughnut" [data]="ChartGuadagniGetter()"></c-chart>
+        </c-card-body>
+      </c-card>
+    </c-col>
+    <c-col xs="12" lg="6">
+      <c-card class="mb-4">
+        <c-card-header>
+          Edifici piú noleggiati
+        </c-card-header>
+        <c-card-body>
+          <c-chart type="bar" [data]="ChartNoleggiGetter()"></c-chart>
+        </c-card-body>
+      </c-card>
+    </c-col>
+</c-row>

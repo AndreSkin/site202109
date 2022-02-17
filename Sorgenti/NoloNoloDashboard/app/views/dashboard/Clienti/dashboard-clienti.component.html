@@ -1,0 +1,104 @@
+<c-row>
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-header>Clienti</c-card-header>
+      <c-card-body>
+        <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          align="middle"
+          cTable
+          class="mb-0 border"
+        >
+          <thead cTableColor="light">
+          <tr>
+            <th
+            aria-label="Immagini Profilo"
+            class="text-center">
+              <svg cIcon name="cilPeople"></svg>
+            </th>
+            <th>Cliente</th>
+            <th class="text-center">Guadagno/Danni</th>
+            <th class="text-center">Numero noleggi</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let user of people_data['Clienti']; index as i">
+            <td class="text-center">
+              <c-avatar
+                (click)="NavigateToStorico(user.nome)"
+                style="cursor: pointer;"
+                size="md"
+                src="{{ user.img }}"
+              >
+              </c-avatar>
+            </td>
+            <td>
+              <div>{{ user.nome }}</div>
+              <div class="small text-medium-emphasis">
+                Mail: <span>{{ user.mail }}</span>
+                <br>
+                Indirizzo:
+                {{ user.indirizzo }}
+              </div>
+            </td>
+            <td class="text-center">
+              <div class="clearfix">
+                <div class="float-start">
+                  <strong>{{ Somme(user)[0] }}€</strong>
+                </div>
+                <div class="float-end">
+                  <small class="text-medium-emphasis">
+                    {{ Somme(user)[1] }}€
+                  </small>
+                </div>
+              </div>
+              <c-progress thin
+              >
+                <c-progress-bar
+                  [value]="PercentualeBarre(Somme(user)[0], Somme(user)[1], true)"
+                  color='success'
+                ></c-progress-bar>
+                <c-progress-bar
+                  [value]="PercentualeBarre(Somme(user)[0], Somme(user)[1], false)"
+                  color='danger'
+                ></c-progress-bar
+                >
+              </c-progress
+              >
+            </td>
+            <td class="text-center">
+              <strong>{{ user['storico_noleggi'].length }}</strong>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+
+<c-row>
+  <c-col xs="12" lg="6">
+    <c-card class="mb-4">
+      <c-card-header>
+        Clienti piú Redditizi
+      </c-card-header>
+      <c-card-body>
+        <c-chart type="doughnut" [data]="ChartGetter('reddito')"></c-chart>
+      </c-card-body>
+    </c-card>
+  </c-col>
+  <c-col xs="12" lg="6">
+    <c-card class="mb-4">
+      <c-card-header>
+        Clienti piú Dannosi
+      </c-card-header>
+      <c-card-body>
+        <c-chart type="doughnut" [data]="ChartGetter('danni')"></c-chart>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+

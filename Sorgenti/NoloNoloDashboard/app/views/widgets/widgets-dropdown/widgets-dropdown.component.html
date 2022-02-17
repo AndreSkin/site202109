@@ -1,0 +1,99 @@
+<c-row>
+  <c-col sm="6" xl="3">
+    <c-widget-stat-a
+      class="mb-4"
+      color="primary"
+      [title]="'Clienti'"
+      style="cursor: pointer;"
+      (click)="NavigateToClienti()"
+    >
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>{{numero_elementi[0]}}</span>
+
+      </ng-template>
+      <ng-template cTemplateId="widgetActionTemplate">
+      </ng-template>
+      <ng-template cTemplateId="widgetChartTemplate">
+        <c-chart
+          [data]="data[0]"
+          [options]="options[0]"
+          class="mt-3 mx-3"
+          height="70"
+          type="bar">
+        </c-chart>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+  <c-col sm="6" xl="3">
+    <c-widget-stat-a
+      [title]="'Dipendenti'"
+      class="mb-4"
+      color="info"
+      style="cursor: pointer;"
+      (click)="NavigateToDipendenti()"
+    >
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>{{numero_elementi[1]}}</span>
+      </ng-template>
+      <ng-template cTemplateId="widgetActionTemplate">
+      </ng-template>
+      <ng-template cTemplateId="widgetChartTemplate">
+        <c-chart
+          [data]="data[1]"
+          [options]="options[0]"
+          class="mt-3 mx-3"
+          height="70"
+          type="bar">
+        </c-chart>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+  <c-col sm="6" xl="3">
+    <c-widget-stat-a
+      [title]="'Inventario'"
+      class="mb-4"
+      color="warning"
+      style="cursor: pointer;"
+      (click)="NavigateToInventario()"
+    >
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>{{numero_elementi[2]}}</span>
+      </ng-template>
+      <ng-template cTemplateId="widgetActionTemplate">
+      </ng-template>
+      <ng-template cTemplateId="widgetChartTemplate">
+        <c-chart
+          [data]="data[2]"
+          [options]="options[0]"
+          class="mt-3 mx-3"
+          height="70"
+          type="bar">
+        </c-chart>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+  <c-col sm="6" xl="3">
+    <c-widget-stat-a
+      [title]="'Noleggio'"
+      class="mb-4"
+      color="danger"
+      style="cursor: pointer;"
+      (click)="NavigateToNoleggio()"
+    >
+      <ng-template cTemplateId="widgetValueTemplate" ngPreserveWhitespaces>
+        <span>{{numero_elementi[3]}}</span>
+      </ng-template>
+      <ng-template cTemplateId="widgetActionTemplate">
+      </ng-template>
+      <ng-template cTemplateId="widgetChartTemplate">
+        <c-chart
+          [data]="data[3]"
+          [options]="options[0]"
+          class="mt-3 mx-3"
+          height="70"
+          type="bar">
+        </c-chart>
+      </ng-template>
+    </c-widget-stat-a>
+  </c-col>
+</c-row>
