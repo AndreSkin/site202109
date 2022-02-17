@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Home",
+    "path": "/Home",
+    "component": "C:\\\\Users\\\\mario\\\\OneDrive\\\\Desktop\\\\NoloNolo\\\\pages\\\\Home\\\\index.vue",
+    "chunkName": "pages/Home/index",
+    "_name": "_1beeb11e"
+  },
+  {
+    "name": "Item",
+    "path": "/Item",
+    "component": "C:\\\\Users\\\\mario\\\\OneDrive\\\\Desktop\\\\NoloNolo\\\\pages\\\\Item\\\\index.vue",
+    "chunkName": "pages/Item/index",
+    "_name": "_aed7fb2c"
+  },
+  {
+    "name": "Pay",
+    "path": "/Pay",
+    "component": "C:\\\\Users\\\\mario\\\\OneDrive\\\\Desktop\\\\NoloNolo\\\\pages\\\\Pay\\\\index.vue",
+    "chunkName": "pages/Pay/index",
+    "_name": "_3a1a726f"
+  },
+  {
+    "name": "Register",
+    "path": "/Register",
+    "component": "C:\\\\Users\\\\mario\\\\OneDrive\\\\Desktop\\\\NoloNolo\\\\pages\\\\Register\\\\index.vue",
+    "chunkName": "pages/Register/index",
+    "_name": "_0e85035a"
+  },
+  {
+    "name": "User",
+    "path": "/User",
+    "component": "C:\\\\Users\\\\mario\\\\OneDrive\\\\Desktop\\\\NoloNolo\\\\pages\\\\User\\\\index.vue",
+    "chunkName": "pages/User/index",
+    "_name": "_23776eb2"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "C:\\\\Users\\\\mario\\\\OneDrive\\\\Desktop\\\\NoloNolo\\\\pages\\\\index.vue",
+    "chunkName": "pages/index",
+    "_name": "_07a0253d"
+  }
+]
