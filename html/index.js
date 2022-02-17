@@ -801,7 +801,7 @@ app.put('/mongo/putnoleggi', (req, res) => {
          };
       }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////77
+
 
     const query_occ = { nome: data.office, occupato: { $elemMatch: { from: { $in: arr_start }, to: { $in: arr_end } } } };
 
@@ -891,7 +891,6 @@ app.delete('/mongo/deletenoleggi', (req, res) => {
         }
     };
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////77
 
     const query_occ = { nome: data.office};
 
