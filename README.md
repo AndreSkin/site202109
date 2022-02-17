@@ -7,7 +7,7 @@ Mario Miccichè, Andrea Loretti, Andrea Schinoppi
 Il progetto consisteva nel creare un sito di noleggi.  
 Abbiamo scelto di noleggiare uffici.  
 
-Il lavoro è stato diviso tra i componenti come segue:
+Il lavoro è stato diviso tra i componenti come segue:  
 Front-office con Nuxt -> Mario Miccichè  
 Back-office con Jquery -> Andrea Schinoppi  
 Management dashboard con Angular -> Andrea Loretti  
