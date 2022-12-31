@@ -19,7 +19,7 @@
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "core-js": "^3.19.2",
-    "nuxt": "^2.15.8",
+    "nuxt": "^3.0.0",
     "nuxt-leaflet": "0.0.25",
     "vuetify": "^2.6.10",
     "vuewordcloud": "^18.7.12"
@@ -39,6 +39,6 @@
     "jest-junit": "^13.0.0",
     "sass-loader": "^10.1.1",
     "sonarqube-scanner": "^2.8.1",
-    "vue-jest": "^3.0.4"
+    "vue-jest": "^4.0.1"
   }
 }
