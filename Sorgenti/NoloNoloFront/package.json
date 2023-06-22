@@ -19,7 +19,7 @@
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "core-js": "^3.19.2",
-    "nuxt": "^3.0.0",
+    "nuxt": "^3.4.3",
     "nuxt-leaflet": "0.0.25",
     "vuetify": "^2.6.10",
     "vuewordcloud": "^18.7.12"
